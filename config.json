@@ -1,0 +1,12 @@
+{
+    "openai_api_key": "your-api",
+    "language": "auto",
+    "hide_history_when_not_logged_in": true,
+    "default_model": "gpt-3.5-turbo",
+    "multi_api_key": false,
+    "server_name": "127.0.0.1",
+    "server_port": 8010,
+    "autobrowser": false,
+    "share": false,
+    "websearch_engine": "duckduckgo"
+}

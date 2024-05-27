@@ -12,11 +12,13 @@
 
 <div align="center"><h2>Demonstration</h2></div>
 
-&emsp;&emsp;You can easily and directly experience the project demo online on `HuggingFace` now. Click here for Online Experience 👉 [Temp - a Hugging Face Space by Tsumugii](https://huggingface.co/spaces/Tsumugii/temp)
+![image-20240527204109978](https://cdn.jsdelivr.net/gh/Tsumugii24/Typora-images@main/images/2024%2F05%2F27%2F11a70d1277ce384a55da2cc89ae83bd5-image-20240527204109978-71c0aa.png)
+
+&emsp;&emsp;You can easily and directly experience the our demo online on `HuggingFace` now. Click here for Online Experience 👉 [WonderWhy - a Hugging Face Space by Tsumugii](https://huggingface.co/spaces/Tsumugii/WonderWhy)
 
 </div>
 
-<div align="center"><h2>ToDo</h2></div>
+<div align="center"><h2>Todo</h2></div>
 
 - [ ] Complete the Gradio Interface and UI design
 - [ ] Add team members brief introduction
@@ -43,7 +45,7 @@
 &emsp;&emsp;1. create a virtual `conda` environment for the demo 😆
 
 ```bash
-$ conda create -n wonderwhy python==3.10 # table is the name of your environment
+$ conda create -n wonderwhy python==3.10 # wonderwhy is the name of your environment
 $ conda activate wonderwhy
 ```
 
@@ -79,8 +81,9 @@ OPENAI_URL_BASE = ""
 
 <div align="center"><h2>References</h2></div>
 
-1. [Gradio](https://www.gradio.app/)
-2. xxx
+1. [Gradio Official Documents](https://www.gradio.app/)
+2. [LIC·2024 语言与智能技术竞赛_飞桨大赛-飞桨AI Studio星河社区](https://aistudio.baidu.com/competition/detail/1171/0/introduction)
+3. [PoetryChat: 一个面向不同年龄段的交互式LLM古诗学习助手](https://github.com/Antony-Zhang/PoetryChat)
 
 
 
@@ -92,6 +95,12 @@ OPENAI_URL_BASE = ""
 
 &emsp;&emsp;***I would like to express my sincere gratitude to my teammates  for their efforts and supports throughout the development of this project. Their expertise and insightful feedback played a crucial role in shaping the direction of the project.***
 
+@Tsumugii24
+
+@jjyaoao
+
+@jiaohui
+
 
 
 
@@ -100,5 +109,5 @@ OPENAI_URL_BASE = ""
 
 <div align="center"><h2>Contact</h2></div>
 
-Feel free to open GitHub issues or directly send me a mail if you have any questions about the project. 👻
+Feel free to open GitHub issues or directly send me a mail if you have any questions about this project. 
 

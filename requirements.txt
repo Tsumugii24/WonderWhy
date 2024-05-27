@@ -1,0 +1,27 @@
+gradio==3.43.2
+gradio_client==0.5.0
+gradio[oauth]
+pypinyin
+tiktoken
+socksio
+tqdm
+colorama
+Pygments
+markdown
+pandas
+commentjson
+jinja2
+langchain==0.1.10
+langchain-community==0.0.25
+markdown
+PyPDF2
+pdfplumber
+faiss-cpu>=1.7.4
+pydantic-core==2.14.6
+pydantic==1.10.13
+rank-bm25
+jieba
+loguru
+openai
+langchain-openai
+# appbuilder-sdk==0.4.0
