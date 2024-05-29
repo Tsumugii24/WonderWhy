@@ -95,11 +95,12 @@ OPENAI_URL_BASE = ""
 
 &emsp;&emsp;***I would like to express my sincere gratitude to my teammates  for their efforts and supports throughout the development of this project. Their expertise and insightful feedback played a crucial role in shaping the direction of the project.***
 
-@Tsumugii24
+- [@Tsumugii24](https://github.com/Tsumugii24)
 
-@jjyaoao
+- [@jjyaoao](https://github.com/jjyaoao)
 
-@jiaohui
+- [@jiaohui](https://github.com/jiaohuix)
+
 
 
 
