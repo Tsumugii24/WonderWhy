@@ -56,6 +56,15 @@ def get_model(
             logger.info(f"正在加载LLaMA模型: {model_name}")
             from src.llama import LLaMAClient
             model = LLaMAClient(model_name, user_name=user_name)
+        elif model_type == ModelType.ZhipuAI: # todo: fix zhipu bug
+            logger.info(f"正在加载ZhipuAI模型: {model_name}")
+            from src.zhipu_client import ZhipuAIClient
+            model = ZhipuAIClient(
+                model_name=model_name,
+                api_key=access_key,
+                system_prompt=system_prompt,
+                user_name=user_name,
+            )
         elif model_type == ModelType.Unknown:
             raise ValueError(f"未知模型: {model_name}")
     except Exception as e:
