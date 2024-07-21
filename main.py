@@ -8,6 +8,7 @@ from loguru import logger
 import appbuilder
 import time
 import os
+import requests
 
 from src.config import (
     http_proxy,
@@ -119,8 +120,69 @@ APPBUILDER_APPID_DEFAULT = "2ef66c07-b4ac-4fb7-adf9-a76b5c80b2b5"
 APPBUILDER_APPID_CHILD = "c2de7a91-e17e-4d31-becf-b5d014156de7"
 APPBUILDER_APPID_STUDENT = "93ea3085-0e79-40f0-8e3d-f47381af427a"
 
+def query_knowledge_base(query, kb_name, only_imgs = False):
+    """
+    Call the FastAPI endpoint to query the knowledge base.
+
+    Args:
+        query (str): The query to send to the knowledge base.
+        kb_name (str): The name of the knowledge base.
+    
+    Returns:
+        dict: The response from the API.
+    """
+    url = "http://127.0.0.1:8000/v1/kb/chat_kb"  # Adjust the URL to your FastAPI server
+
+    data = {
+        "query": query,
+        "kb_name": kb_name,
+        "only_images": only_imgs
+    }
+    logger.info(f"Sending request to {url} with data: {data}")
+    response = requests.post(url, json=data)
+
+    if response.status_code == 200:
+        logger.info("Request successful.")
+        return response.json()
+    else:
+        logger.error(f"Request failed with status code {response.status_code}: {response.text}")
+        # raise Exception(f"Failed to query knowledge base: {response.text}")
+        return {"msg": "error"}
+    
+
 def on_mode_change(mode):
     return f"已选择模式：{mode}"
+
+def generate_image_from_text(prompt, width=1024, height=1024, image_num=1):
+    import appbuilder
+    os.environ["APPBUILDER_TOKEN"] = "bce-v3/ALTAK-QwuihwYsMjA5jBiIBVfJP/51f962e086efb6f3a2332414360552bae5f3958d"
+    text2Image = appbuilder.Text2Image()
+    content_data = {"prompt": prompt, "width": width, "height": height, "image_num": image_num}
+    msg = appbuilder.Message(content_data)
+    out = text2Image.run(msg)
+    return out.content['img_urls']
+
+def generate_image(prompt):
+    img_urls = generate_image_from_text(prompt)
+    return img_urls[0]  # 假设只生成一张图片
+
+def generate_local_image(prompt):
+    # 模拟生成图片并保存到本地路径
+    # 在实际应用中，你需要调用你的图像生成函数并保存图像
+    # 这里我们假设生成的图像保存在 `generated_image.png`
+    # local_image_path = "generate_image.png"
+    img_urls = query_knowledge_base(query=prompt, kb_name="lic", only_imgs=True)["img_urls"]
+    local_image_path = img_urls[0]
+
+    # 模拟生成图片保存
+    # 这里你可以替换为实际的图像生成逻辑
+    # from PIL import Image, ImageDraw, ImageFont
+    # image = Image.new('RGB', (1024, 1024), color = (73, 109, 137))
+    # d = ImageDraw.Draw(image)
+    # d.text((10,10), prompt, fill=(255,255,0))
+    # image.save(local_image_path)
+    # time.sleep(6)
+    return local_image_path
 
 def respond(query, app_selection, chat_history):
     # 根据用户选择设置应用ID
@@ -322,7 +384,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                     gr.HTML(get_html("close_btn.html").format(
                         obj="toolbox"), elem_classes="close-btn")
                 with gr.Tabs(elem_id="chuanhu-toolbox-tabs"):
-                    with gr.Tab(label=i18n("对话")):
+                    with gr.Tab(label=i18n("主题")):
                         with gr.Accordion(label=i18n("模型"), open=not HIDE_MY_KEY, visible=not HIDE_MY_KEY):
                             keyTxt = gr.Textbox(
                                 show_label=True,
@@ -342,18 +404,18 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                                     "**发送消息** 或 **提交key** 以显示额度"), elem_id="usage-display",
                                     elem_classes="insert-block", visible=show_api_billing)
                         gr.Markdown("---", elem_classes="hr-line", visible=not HIDE_MY_KEY)
-                        with gr.Accordion(label="Prompt", open=True):
+                        with gr.Accordion(label="问题思考与主题展示", open=True):
                             systemPromptTxt = gr.Textbox(
                                 show_label=True,
                                 placeholder=i18n("在这里输入System Prompt..."),
-                                label="System prompt",
+                                label="小朋友的提问和回答",
                                 value=INITIAL_SYSTEM_PROMPT,
                                 lines=8
                             )
                             retain_system_prompt_checkbox = gr.Checkbox(
-                                label=i18n("新建对话保留Prompt"), value=False, visible=True,
+                                label=i18n("新建对话保留当前讨论主题"), value=False, visible=True,
                                 elem_classes="switch-checkbox")
-                            with gr.Accordion(label=i18n("加载Prompt模板"), open=False):
+                            with gr.Accordion(label=i18n("加载自定义讨论主题"), open=False):
                                 with gr.Column():
                                     with gr.Row():
                                         with gr.Column(scale=6):
@@ -391,14 +453,39 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                                 "双栏pdf"), value=False)
                             summarize_btn = gr.Button(i18n("总结"), visible=False)
 
-                    with gr.Tab(label=i18n("切换模式")):  # 将标题修改为“切换模式”
+                    with gr.Tab(label=i18n("模式")):  # 将标题修改为“模式”
                         gr.Markdown(i18n("# 选择运行模式 ⚙️"),
                                     elem_id="mode-selection-info")
-                        with gr.Accordion(i18n("模式切换"), open=True):
-                            mode_selection = gr.Radio(choices=["默认模式", "成人模式", "儿童模式", "学生模式"], label=i18n("运行模式"), value="默认模式")
-                            submit_button = gr.Button(i18n("确认选择"))
-                            result = gr.Textbox(label="选择结果")
-                            submit_button.click(on_mode_change, inputs=mode_selection, outputs=result)
+                        # with gr.Accordion(i18n("模式切换"), open=True):
+                        #     mode_selection = gr.Radio(choices=["默认模式", "成人模式", "儿童模式", "学生模式"], label=i18n("运行模式"), value="默认模式")
+                        #     submit_button = gr.Button(i18n("确认选择"))
+                        #     result = gr.Textbox(label="选择结果")
+                        #     submit_button.click(on_mode_change, inputs=mode_selection, outputs=result)
+                        
+                        gr.Markdown("### 多模态RAG检索参考")
+                        # 添加文本输入框用于输入生成图片的文本
+                        image_output = gr.Image(label="一键生成思维导图")
+                        text_input = gr.Textbox(label="你的描述")
+                        # generate_button = gr.Button("生成思维导图")
+                        generate_button = gr.Button("图像搜索")
+
+                        
+                        # 做一个假本地返回效果
+                        generate_button.click(generate_local_image, inputs=text_input, outputs=image_output)
+  
+
+                        gr.Markdown("### 智能图片生成")
+                        # 添加文本输入框用于输入生成图片的文本
+                        image_output = gr.Image(label="一键生成绘本")
+                        text_input = gr.Textbox(label="你的描述")
+                        generate_button = gr.Button("生成图片")
+                        
+                        # 绑定按钮点击事件
+                        # generate_button.click(generate_image, inputs=text_input, outputs=image_output)
+                        # 做一个假本地返回效果
+                        generate_button.click(generate_local_image, inputs=text_input, outputs=image_output)
+  
+                    
                     # with gr.Tab(label=i18n("参数")):
                         # gr.Markdown(i18n("# ⚠️ 务必谨慎更改 ⚠️"),
                         #             elem_id="advanced-warning")
@@ -491,7 +578,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                             visible=False
                         )
                     with gr.Tab(label=i18n("关于")):
-                        gr.Markdown("#### " + i18n("PoetryChat Github地址"))
+                        gr.Markdown("#### " + i18n("WonderWhy Github地址"))
                         gr.Markdown(DESCRIPTION)
 
     with gr.Row(elem_id="popup-wrapper"):
@@ -560,7 +647,8 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                         )
 
                     with gr.Tab(label=i18n("关于"), elem_id="about-tab"):
-                        gr.Markdown("# " + i18n("PoetryChat"))
+                        # gr.Markdown("# " + i18n("PoetryChat"))
+                        gr.Markdown("# " + i18n("WonderWhy"))
                         gr.Markdown(DESCRIPTION, elem_id="description")
 
             with gr.Box(elem_id="web-config", visible=False):
