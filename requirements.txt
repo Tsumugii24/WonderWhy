@@ -26,3 +26,5 @@ openai
 langchain-openai
 SQLAlchemy==2.0.30
 # appbuilder-sdk==0.4.0
+spark-ai-python
+openpyxl
