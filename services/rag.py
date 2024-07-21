@@ -440,30 +440,6 @@ async def generate_answer(request: ChatRequest):
                 img_url = img_node.metadata["img_url"]
                 ret["img_urls"].append(img_url)
 
-            # 取出分数最高的 id 对应的 idx
-            # highest_score_id = int(sorted_results[0][1])
-            # logger.info(f"highest_score_id: {highest_score_id}")
-            # img_node = all_img_nodes[highest_score_id]
-            # # nodes = vec_store.get_nodes(highest_score_id)
-            # # print("nodes ", nodes)
-            # # nodes = index.docstore.docs # {nid: node}
-            # # print("nodes", len(nodes), type(nodes))
-            # # print(type(nodes[0]))
-            # # img_node = nodes[int(highest_score_id)]
-            # print("img_node",img_node)
-            # img_url = img_node.metadata["img_url"]
-            # ret["img_urls"].append(img_url)
-            
-            # for node_id, img_node in nodes.items():
-            #     if node_id == highest_score_id:
-            #         img_url = img_node.metadata["img_url"]
-            #         ret["img_urls"].append(img_url)
-            #         print(type(img_node),node_id, img_node, img_url)
-
-            # todo: find node and urls
-            # return VectorStoreQueryResult(
-            #     similarities=filtered_dists, ids=filtered_node_idxs
-            # )
             return ret
 
         else:
