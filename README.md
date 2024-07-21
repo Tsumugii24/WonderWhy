@@ -1,10 +1,10 @@
-<div align="center"><h1>PoetryChat</h1></div>
+<div align="center"><h1>WonderWhy</h1></div>
 
 </div>
 
 <div align="center"><h2>Description</h2></div>
 
-&emsp;&emsp;Powered by Large Language Models, PoetryChat ...
+&emsp;&emsp;Powered by Large Language Models, WonderWhy ...
 
 
 
@@ -12,47 +12,27 @@
 
 <div align="center"><h2>Demonstration</h2></div>
 
-![诗趣伴行](./docs/诗趣伴行.png)
+![image-20240527204109978](https://cdn.jsdelivr.net/gh/Tsumugii24/Typora-images@main/images/2024%2F05%2F27%2F11a70d1277ce384a55da2cc89ae83bd5-image-20240527204109978-71c0aa.png)
 
-&emsp;&emsp;You can easily and directly experience the our demo online on `HuggingFace` now. Click here for Online Experience 👉 [PoetryChat - a Hugging Face Space by jjyaoao](https://huggingface.co/spaces/jjyaoao/poetryChat)
+&emsp;&emsp;You can easily and directly experience the our demo online on `HuggingFace` now. Click here for Online Experience 👉 [WonderWhy - a Hugging Face Space by Tsumugii](https://huggingface.co/spaces/Tsumugii/WonderWhy)
 
 </div>
 
 <div align="center"><h2>Todo</h2></div>
 
-- P1
-    - [ ] Export picture "books" for children
-    - [ ] Export cards with poet and picture, for recitation
-    - [ ] Export map-liked records for parent-child interaction
-    - [ ] Test and exsercise for students
-- P2
-    - [ ] Complete the Gradio Interface and UI design
-    - [ ] Add team members brief introduction
-    - [ ] Add a gif demonstration
-    - [ ] Deploy the demo on HuggingFace
-    - [ ] RAG layer
-    - [ ] LLM Agent layer
-    - [ ] Application layer
-
-</div>
+- [ ] Complete the Gradio Interface and UI design
+- [ ] Add team members brief introduction
+- [ ] Add a gif demonstration
+- [ ] Deploy the demo on HuggingFace
+- [ ] RAG layer
+- [ ] LLM Agent layer
+- [ ] Application layer
 
 
-<div>
-    <div align="center"><h2>Development Logs</h2></div>
-
-> Remember to update the `README.md` and `requirements.txt` after each commit!
-
-- [2024-07-05] Historic Talk! 
 
 
 
 </div>
-
-
-
-
-
-
 
 <div align="center"><h2>Quick Start</h2></div>
 
@@ -65,14 +45,14 @@
 &emsp;&emsp;1. create a virtual `conda` environment for the demo 😆
 
 ```bash
-$ conda create -n poetrychat python==3.10 # poetrychat is the name of your environment
-$ conda activate poetrychat
+$ conda create -n wonderwhy python==3.10 # wonderwhy is the name of your environment
+$ conda activate wonderwhy
 ```
 
 &emsp;&emsp;2. Install essential `requirements` by run the following command in the `CLI` 😊
 
 ```bash
-$ git clone https://github.com/Antony-Zhang/PoetryChat && cd PoetryChat && git checkout poetryChat2.0
+$ git clone https://github.com/Tsumugii24/WonderWhy && cd WonderWhy
 $ pip install -r requirements.txt
 ```
 
@@ -80,18 +60,11 @@ $ pip install -r requirements.txt
     <summary><h4>Preparation</h4></summary>
 
 
-&emsp;&emsp;1. open `config_example.json` and fill your own `API Keys` in the **corresponding place** if you want to use certain LLM, then **rename** the file into `config.json`
+&emsp;&emsp;1. open `.env.example` and fill your own `API Keys` in the **corresponding place** if you want to use certain LLM, then **rename** the file into `.env`
 
-```json
-// Openai
-"openai_api_key": "",
-"openai_api_base": "",
-// Spark Desk
-"sparkdesk_apisecret": "",
-"sparkdesk_apikey": "",
-"sparkdesk_appid": "",
-// Bing
-"bing_search_api_key": ""
+```
+OPENAI_API_KEY = ""
+OPENAI_URL_BASE = ""
 ```
 
 &emsp;&emsp;2. xxx
@@ -124,9 +97,12 @@ $ pip install -r requirements.txt
 
 - [@Tsumugii24](https://github.com/Tsumugii24)
 
+- [@jjyaoao](https://github.com/jjyaoao)
+
 - [@jiaohui](https://github.com/jiaohuix)
 
-- [@jjyaoao](https://github.com/jjyaoao)
+
+
 
 
 
