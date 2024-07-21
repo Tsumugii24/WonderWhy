@@ -160,6 +160,21 @@ APPBUILDER_APPID_STUDENT = "93ea3085-0e79-40f0-8e3d-f47381af427a"
 #                 value="默认模式"
 #             )
 #     return mode_selection
+def generate_local_image(prompt):
+    # 模拟生成图片并保存到本地路径
+    # 在实际应用中，你需要调用你的图像生成函数并保存图像
+    # 这里我们假设生成的图像保存在 `generated_image.png`
+    local_image_path = "generate_image.png"
+    
+    # 模拟生成图片保存
+    # 这里你可以替换为实际的图像生成逻辑
+    # from PIL import Image, ImageDraw, ImageFont
+    # image = Image.new('RGB', (1024, 1024), color = (73, 109, 137))
+    # d = ImageDraw.Draw(image)
+    # d.text((10,10), prompt, fill=(255,255,0))
+    # image.save(local_image_path)
+    time.sleep(6)
+    return local_image_path
 
 def on_mode_change(mode, current_model):
     match(mode):
@@ -426,8 +441,17 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                             image_text = gr.Textbox(label="图片生成描述", placeholder=i18n("输入'本地'可查看默认图片"))
                             generate_button = gr.Button("一键生成绘本🖼️")
                             generate_button.click(image_generator.generate_image, inputs=image_text, outputs=image_output)
-                            
-                    
+                        gr.Markdown("---", elem_classes="hr-line")   
+                        gr.Markdown("### 多模态RAG检索参考")
+                        # 添加文本输入框用于输入生成图片的文本
+                        image_output = gr.Image(label="一键检索图书图像")
+                        text_input = gr.Textbox(label="你的描述")
+                        generate_button = gr.Button("返回匹配内容")
+                        
+                        # 做一个假本地返回效果
+                        generate_button.click(generate_local_image, inputs=text_input, outputs=image_output)
+  
+
                     # with gr.Tab(label=i18n("参数")):
                         # gr.Markdown(i18n("# ⚠️ 务必谨慎更改 ⚠️"),
                         #             elem_id="advanced-warning")
