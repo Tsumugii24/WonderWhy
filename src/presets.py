@@ -83,7 +83,8 @@ INDEX_QUERY_TEMPRATURE = 1.0
 TITLE = i18n("WonderWhy 🌍")
 
 DESCRIPTION = i18n("GitHub: [Tsumugii24/WonderWhy](https://github.com/Tsumugii24/WonderWhy)")
-VIDEO = i18n("Bilibili: [WonderWhy-demo](https://www.bilibili.com/video/BV1Pt8teWEqJ/)")
+VIDEO = i18n("Bilibili: [WonderWhy作品展示](https://www.bilibili.com/video/BV1Pt8teWEqJ/)")
+LIC = i18n("WonderWhy为LIC·2024语言与智能技术竞赛的参赛作品，作品与上海少年儿童出版社有限公司合作，围绕“十万个为什么”IP探索面向真实场景的应用建设。\n\n 赛事官网:http://lic2024.cipsc.org.cn/ \n\n作品中所使用的官方数据集包括《十万个为什么》系列丛书中的《航空与航天》、《天文》、《动物》、《植物》、《生命》、《古生物》和《海洋》图书。")
 
 ONLINE_MODELS = [
     "gpt-3.5-turbo",
@@ -109,7 +110,7 @@ MODEL_ALIASES = {
     "gpt-4o": "AppBuilder-SDK",
     "gpt-4": "gpt-3.5-turbo",
     "gpt-4-32k": "gpt-4o",
-    "gpt-4-1106-preview": "gpt-4-1106-preview",
+    "gpt-4-1106-preview": "gpt-4o-mini",
     "gpt-4-turbo-preview": "gpt-4-turbo",
     "gpt-4-vision-preview": "gpt-4-vision",
 }

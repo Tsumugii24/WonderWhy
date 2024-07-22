@@ -53,7 +53,7 @@ from src.presets import (
     DEFAULT_SYSTEM_PROMPT,
     CHILD_SYSTEM_PROMPT,
     STUDENT_SYSTEM_PROMPT,
-    ADULT_SYSTEM_PROMPT, VIDEO,
+    ADULT_SYSTEM_PROMPT, VIDEO, LIC,
 )
 from src.utils import (
     delete_chat_history,
@@ -549,6 +549,8 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                         gr.Markdown(DESCRIPTION)
                         gr.Markdown("#### " + i18n("WonderWhy Demo演示"))
                         gr.Markdown(VIDEO)
+                        gr.Markdown("#### " + i18n("ABOUT WonderWhy&LIC·2024"))
+                        gr.Markdown(LIC)
 
     with gr.Row(elem_id="popup-wrapper"):
         with gr.Box(elem_id="chuanhu-popup"):
