@@ -65,6 +65,15 @@ def get_model(
                 system_prompt=system_prompt,
                 user_name=user_name,
             )
+        elif model_type == ModelType.RAG: # todo: fix zhipu bug
+            logger.info(f"正在加载LIC RAG模型: {model_name}")
+            from src.rag_client import RAGClient
+            model = RAGClient(
+                model_name=model_name,
+                api_key=access_key,
+                system_prompt=system_prompt,
+                user_name=user_name,
+            )
         elif model_type == ModelType.Unknown:
             raise ValueError(f"未知模型: {model_name}")
     except Exception as e:

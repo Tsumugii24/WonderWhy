@@ -1,0 +1,32 @@
+{
+    "system": null,
+    "history": [
+        {
+            "role": "user",
+            "content": "有哪些海怪"
+        },
+        {
+            "role": "assistant",
+            "content": "欧洲神话传说中的海怪包括巨型章鱼和所谓的“海蛇”。其中，最著名的深海水怪是被称为“克拉肯（Kraken）”的巨型章鱼。它在各种传说和科幻作品中出现过，如凡尔纳的《海底两万里》。此外，“海蛇”一类的海怪通常指的是体型巨大的海洋生物，例如皇带鱼，在某些情况下可能被误认为是“海蛇”。这些海怪的描述往往基于航海者的传闻和捕风捉影的故事，并非科学证实的存在。"
+        }
+    ],
+    "chatbot": [
+        [
+            "<div class=\"user-message\">有哪些海怪</div>",
+            "<div class=\"raw-message hideM\"><pre class=\"fake-pre\">欧洲神话传说中的海怪包括巨型章鱼和所谓的“海蛇”。其中，最著名的深海水怪是被称为“克拉肯（Kraken）”的巨型章鱼。它在各种传说和科幻作品中出现过，如凡尔纳的《海底两万里》。此外，“海蛇”一类的海怪通常指的是体型巨大的海洋生物，例如皇带鱼，在某些情况下可能被误认为是“海蛇”。这些海怪的描述往往基于航海者的传闻和捕风捉影的故事，并非科学证实的存在。</pre></div><div class=\"md-message\">\n\n欧洲神话传说中的海怪包括巨型章鱼和所谓的“海蛇”。其中，最著名的深海水怪是被称为“克拉肯（Kraken）”的巨型章鱼。它在各种传说和科幻作品中出现过，如凡尔纳的《海底两万里》。此外，“海蛇”一类的海怪通常指的是体型巨大的海洋生物，例如皇带鱼，在某些情况下可能被误认为是“海蛇”。这些海怪的描述往往基于航海者的传闻和捕风捉影的故事，并非科学证实的存在。\n</div>"
+        ]
+    ],
+    "model_name": "rag",
+    "single_turn": false,
+    "temperature": 1.0,
+    "top_p": 1.0,
+    "n_choices": 1,
+    "stop_sequence": "",
+    "token_upper_limit": 4096,
+    "max_generation_token": null,
+    "presence_penalty": 0,
+    "frequency_penalty": 0,
+    "logit_bias": null,
+    "user_identifier": "",
+    "metadata": {}
+}

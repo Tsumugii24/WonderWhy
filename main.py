@@ -4,6 +4,7 @@ from loguru import logger   # 用于日志记录
 # import appbuilder           # 用于构建应用
 import time
 import os
+import requests
 
 from src.config import (
     http_proxy,
@@ -160,12 +161,46 @@ APPBUILDER_APPID_STUDENT = "93ea3085-0e79-40f0-8e3d-f47381af427a"
 #                 value="默认模式"
 #             )
 #     return mode_selection
+
+def query_knowledge_base(query, kb_name, only_imgs = False):
+    """
+    Call the FastAPI endpoint to query the knowledge base.
+
+    Args:
+        query (str): The query to send to the knowledge base.
+        kb_name (str): The name of the knowledge base.
+    
+    Returns:
+        dict: The response from the API.
+    """
+    url = "http://127.0.0.1:8000/v1/kb/chat_kb"  # Adjust the URL to your FastAPI server
+
+    data = {
+        "query": query,
+        "kb_name": kb_name,
+        "only_images": only_imgs
+    }
+    logger.info(f"Sending request to {url} with data: {data}")
+    response = requests.post(url, json=data)
+
+    if response.status_code == 200:
+        logger.info("Request successful.")
+        return response.json()
+    else:
+        logger.error(f"Request failed with status code {response.status_code}: {response.text}")
+        # raise Exception(f"Failed to query knowledge base: {response.text}")
+        return {"msg": "error"}
+    
+
+
 def generate_local_image(prompt):
     # 模拟生成图片并保存到本地路径
     # 在实际应用中，你需要调用你的图像生成函数并保存图像
     # 这里我们假设生成的图像保存在 `generated_image.png`
-    local_image_path = "generate_image.png"
-    
+    # local_image_path = "generate_image.png"
+    img_urls = query_knowledge_base(query=prompt, kb_name="lic", only_imgs=True)["img_urls"]
+    local_image_path = img_urls[0]
+
     # 模拟生成图片保存
     # 这里你可以替换为实际的图像生成逻辑
     # from PIL import Image, ImageDraw, ImageFont
@@ -173,8 +208,8 @@ def generate_local_image(prompt):
     # d = ImageDraw.Draw(image)
     # d.text((10,10), prompt, fill=(255,255,0))
     # image.save(local_image_path)
-    time.sleep(6)
     return local_image_path
+
 
 def on_mode_change(mode, current_model):
     match(mode):

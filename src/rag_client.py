@@ -5,6 +5,7 @@ import json
 import os
 from io import BytesIO
 import requests
+import time
 
 import gradio as gr
 import requests
@@ -98,7 +99,7 @@ def query_knowledge_base(query, kb_name, only_imgs = False):
         return {"msg": "error"}
     
 
-class ZhipuAIClient(OpenAIClient):
+class RAGClient(OpenAIClient):
     def __init__(
             self,
             model_name,
@@ -123,18 +124,39 @@ class ZhipuAIClient(OpenAIClient):
         # self.user_name = user_name
         logger.info(f"user name: {user_name}")
 
+    # todo
     def get_answer_stream_iter(self):
-        if not self.api_key:
-            raise ValueError("API key is not set")
+        # if not self.api_key:
+        #     raise ValueError("API key is not set")
         response = self._get_response(stream=True)
         if response is not None:
-            stream_iter = decode_chat_response(response)
+            stream_iter = response
             partial_text = ""
             for chunk in stream_iter:
                 partial_text += chunk
+                time.sleep(0.005)
                 yield partial_text
         else:
             yield STANDARD_ERROR_MSG + GENERAL_ERROR_MSG
+
+    # todo
+    def get_answer_at_once(self):
+        content = self._get_response()
+        total_token_count = len(content)
+        return content, total_token_count
+    
+    # def get_answer_stream_iter(self):
+    #     if not self.api_key:
+    #         raise ValueError("API key is not set")
+    #     response = self._get_response(stream=True)
+    #     if response is not None:
+    #         stream_iter = decode_chat_response(response)
+    #         partial_text = ""
+    #         for chunk in stream_iter:
+    #             partial_text += chunk
+    #             yield partial_text
+    #     else:
+    #         yield STANDARD_ERROR_MSG + GENERAL_ERROR_MSG
 
     # def get_answer_at_once(self):
     #     if not self.api_key:
@@ -146,82 +168,21 @@ class ZhipuAIClient(OpenAIClient):
     #     return content, total_token_count
 
 
-    @shared.state.switching_api_key  # 在不开启多账号模式的时候，这个装饰器不会起作用
+    # @shared.state.switching_api_key  # 在不开启多账号模式的时候，这个装饰器不会起作用
     def _get_response(self, stream=False):
-        zhipuai_api_key = self.api_key
         system_prompt = self.system_prompt
         history = self.history
-        # logger.debug(f"{history}")
-        # headers = {
-        #     "Authorization": f"Bearer {zhipuai_api_key}",
-        #     "Content-Type": "application/json",
-        # }
-
         if system_prompt is not None:
             history = [construct_system(system_prompt), *history]
 
-        payload = {
-            "model": self.model_name,
-            "messages": history,
-            "temperature": self.temperature,
-            "top_p": self.top_p,
-            "n": self.n_choices,
-            "stream": stream,
-            "presence_penalty": self.presence_penalty,
-            "frequency_penalty": self.frequency_penalty,
-        }
+        prompt = history[-1]["content"]
+        response = query_knowledge_base(query=prompt, kb_name="lic", only_imgs=False)
+        answer = response.get("answer", None)
+        if answer is None:
+            # TODO: CALL GPT
+            answer = "这题超纲了哦~"
 
-        if self.max_generation_token is not None:
-            payload["max_tokens"] = self.max_generation_token
-        if self.stop_sequence is not None:
-            payload["stop"] = self.stop_sequence
-        if self.logit_bias is not None:
-            payload["logit_bias"] = self.logit_bias
-        if self.user_identifier:
-            payload["user"] = self.user_identifier
-
-        if stream:
-            timeout = TIMEOUT_STREAMING
-        else:
-            timeout = TIMEOUT_ALL
-
-        # 如果有自定义的api-host，使用自定义host发送请求，否则使用默认设置发送请求
-        # if shared.state.chat_completion_url != CHAT_COMPLETION_URL:
-            # logger.debug(f"使用自定义API URL: {shared.state.chat_completion_url}")
-
-        # with config.retrieve_proxy():
-        #     try:
-        #         response = requests.post(
-        #             shared.state.chat_completion_url,
-        #             headers=headers,
-        #             json=payload,
-        #             stream=stream,
-        #             timeout=timeout,
-        #         )
-        #     except Exception as e:
-        #         logger.error(f"Error: {e}")
-        #         response = None
-        # return response
-
-        if self.client is None:
-            self.client = ZhipuAI(api_key = zhipuai_api_key)
-
-        response = self.client.chat.completions.create(
-                model=self.model_name,
-                # model="glm-3-turbo",
-                messages=history,
-                temperature=self.temperature,
-                top_p= self.top_p,
-                stream= stream,
-            )
-
-        
-        # "n": self.n_choices,
-        # "stream": stream,
-        # "presence_penalty": self.presence_penalty,
-        # "frequency_penalty": self.frequency_penalty,
-        print("response in zhipuai ",response, type(response))
-        return response
+        return answer
     
 
     # todo: fix bug
@@ -256,38 +217,3 @@ class ZhipuAIClient(OpenAIClient):
             #     return STANDARD_ERROR_MSG + ERROR_RETRIEVE_MSG
 
 
-    # def predict(
-    #         self,
-    #         inputs,
-    #         chatbot,
-    #         stream=False,
-    #         use_websearch=False,
-    #         files=None,
-    #         reply_language="中文",
-    #         should_check_token_count=True,
-    # ):
-    #     logger.info(f"inputs: {inputs}")
-    #     print(f"inputs: {inputs}")
-
-    #     # status_text = "Hello, World! this is zhipu fake output in predict"
-
-    #     response = query_knowledge_base(query=inputs, kb_name="lic")
-    #     # response = query_knowledge_base(query=inputs, kb_name="lic", only_imgs=True)["img_urls"]
-    #     print("type",type(response),response)
-    #     answer = response.get("answer", None)
-    #     if answer is None:
-    #         # 调用父类，用chat模型回答。
-    #         return super().predict(inputs, chatbot, stream, use_websearch, files, reply_language, should_check_token_count)
-
-    #     chatbot = chatbot + [(inputs, "")]
-    #     for char in answer:
-    #         prev_resp = chatbot[-1][1]
-    #         chatbot[-1] = (inputs, prev_resp+char)
-    #         yield chatbot, answer
-
-
-        # yield chatbot + [(inputs, status_text)], status_text
-        # for char in status_text:
-        #     yield chatbot + [(inputs, char)], char
-
-        # todo: 在这里面用agent做路由：1 chat（or online chat） 2 rag 知识问答 3 多模态问答 4 儿童模式（知识和图片、视频全都幼儿化）

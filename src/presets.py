@@ -32,7 +32,7 @@ class I18nAuto:
 i18n = I18nAuto()  # internationalization
 
 # ChatGPT 设置
-# INITIAL_SYSTEM_PROMPT = "You are a helpful assistant."
+INITIAL_SYSTEM_PROMPT = "You are a helpful assistant."
 POETRY_THEME_INFO = """静夜思
 唐·李白
 床前明月光，疑是地上霜。
@@ -97,8 +97,8 @@ ONLINE_MODELS = [
 
     # zhipuai chatglm 
     "glm-3-turbo",
-    "glm4"
-
+    "glm-4",
+    "rag"
 ]
 
 # 定义实际模型名称和别名的字典

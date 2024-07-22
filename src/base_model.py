@@ -71,6 +71,7 @@ class ModelType(Enum):
     Qwen = 5
     LLaMA = 6
     ZhipuAI = 7
+    RAG = 8
 
     @classmethod
     def get_type(cls, model_name: str):
@@ -88,6 +89,8 @@ class ModelType(Enum):
             model_type = ModelType.LLaMA
         elif model_name_lower in ["glm-3-turbo","glm4"]: # todo: more check
             model_type = ModelType.ZhipuAI
+        elif model_name_lower in ["rag"]: # todo: more check
+            model_type = ModelType.RAG
         else:
             model_type = ModelType.Unknown
         return model_type
