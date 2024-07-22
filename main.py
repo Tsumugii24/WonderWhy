@@ -587,7 +587,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
 
                     with gr.Tab(i18n("网络")):
                         gr.Markdown(
-                            i18n("⚠️ 为保证API-Key安全，请在配置文件`config.json`中修改网络设置"),
+                            i18n("⚠️ 如部分境外IP登录后无法正常访问，请点击🔙 恢复默认网络设置"),
                             elem_id="netsetting-warning")
                         default_btn = gr.Button(i18n("🔙 恢复默认网络设置"))
                         # 网络代理
@@ -606,9 +606,9 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                         # 优先展示自定义的api_host
                         apihostTxt = gr.Textbox(
                             show_label=True,
-                            placeholder="api.openai.com",
-                            label="OpenAI API-Host",
-                            value=api_host or API_HOST,
+                            placeholder="aip.baidubce.com",
+                            label="ERNIE API Endpoint",
+                            value="aip.baidubce.com",
                             lines=1,
                             interactive=False,
                             # container=False,

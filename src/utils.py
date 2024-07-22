@@ -565,7 +565,7 @@ def reset_textbox():
 def reset_default():
     default_host = state.reset_api_host()
     retrieve_proxy("")
-    return gr.update(value=default_host), gr.update(value=""), "API-Host 和代理已重置"
+    return gr.update(value=default_host), gr.update(value=""), "API-Host和代理地址已重置"
 
 
 def change_api_host(host):

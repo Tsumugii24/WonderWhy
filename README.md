@@ -4,7 +4,9 @@
 
 <div align="center"><h2>Description</h2></div>
 
-&emsp;&emsp;Powered by Large Language Models, WonderWhy ...
+&emsp;&emsp;**WonderWhy** is a cross-platform family education AI application based on large language models (LLMs) and generative AI technology. It aims to help parents better respond to various questions raised by their children, providing a high-quality educational interaction platform for kids. The goal is to guide children to think independently and cultivate proper values by offering inspiring, artistic, accessible, and engaging solutions.
+
+&emsp;&emsp;Combining with self-media marketing, WonderWhy creates professional and in-depth scientific parenting solutions. It leverages high-quality information to break down regional educational barriers, reduce educational information disparities, and accelerate educational equity.
 
 
 
@@ -22,10 +24,10 @@
 
 - [x] Complete the Gradio Interface and UI design
 - [x] Add team members brief introduction
-- [x] Add a gif demonstration
+- [x] Add a gif demonstration 👉 https://www.bilibili.com/video/BV1Pt8teWEqJ/
 - [ ] Deploy the demo on HuggingFace
 - [x] RAG layer
-- [x] LLM Agent layer
+- [x] Agent layer
 - [x] Application layer
 
 
@@ -50,8 +52,6 @@
 
 <details open>
     <summary><h4>Installation</h4></summary>
-
-
 &emsp;&emsp;First of all, please make sure that you have already installed `conda` as Python runtime environment. And `miniconda` is strongly recommended.
 
 &emsp;&emsp;1. create a virtual `conda` environment for the demo 😆
@@ -64,29 +64,31 @@ $ conda activate poetrychat
 &emsp;&emsp;2. Install essential `requirements` by run the following command in the `CLI` 😊
 
 ```bash
-$ git clone https://github.com/Antony-Zhang/PoetryChat && cd PoetryChat && git checkout poetryChat2.0
+$ git clone https://github.com/Tsumugii24/WonderWhy && cd WonderWhy
 $ pip install -r requirements.txt
 ```
 
 <details open>
     <summary><h4>Preparation</h4></summary>
-
-
-&emsp;&emsp;1. open `config_example.json` and fill your own `API Keys` in the **corresponding place** if you want to use certain LLM, then **rename** the file into `config.json`
+&emsp;&emsp;Open `config_example.json` and fill your own `API Keys` in the **corresponding place** if you want to use certain LLM, then **rename** the file into `config.json`
 
 ```json
-// Openai
+// OpenAI
 "openai_api_key": "",
 "openai_api_base": "",
 // Spark Desk
 "sparkdesk_apisecret": "",
 "sparkdesk_apikey": "",
 "sparkdesk_appid": "",
-// Bing
+// Bing Search
 "bing_search_api_key": ""
+// ERNIEBOT configurations is already included in the project
 ```
 
-&emsp;&emsp;2. xxx
+<details open>
+    <summary><h4>Running</h4></summary>
+
+&emsp;&emsp;`python run main.py`
 
 
 
@@ -125,5 +127,5 @@ $ pip install -r requirements.txt
 
 <div align="center"><h2>Contact</h2></div>
 
-Feel free to open GitHub issues or directly send me a mail if you have any questions about this project. 
+Feel free to open GitHub issues or directly send me a mail if you have any questions about this project ~
 

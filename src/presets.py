@@ -83,7 +83,7 @@ INDEX_QUERY_TEMPRATURE = 1.0
 TITLE = i18n("WonderWhy 🌍")
 
 DESCRIPTION = i18n("GitHub: [Tsumugii24/WonderWhy](https://github.com/Tsumugii24/WonderWhy)")
-VIDEO = i18n("GitHub: [WonderWhy/demo_video](https://github.com/Tsumugii24/WonderWhy)")
+VIDEO = i18n("Bilibili: [WonderWhy-demo](https://www.bilibili.com/video/BV1Pt8teWEqJ/)")
 
 ONLINE_MODELS = [
     "gpt-3.5-turbo",
@@ -103,10 +103,10 @@ ONLINE_MODELS = [
 
 # 定义实际模型名称和别名的字典
 MODEL_ALIASES = {
-    # "gpt-3.5-turbo": "AppBuilder-SDK",
     "gpt-3.5-turbo": "ERNIE-3.5-8K",
     "gpt-3.5-turbo-16k": "ERNIE-4.0-8K",
     "gpt-3.5-turbo-1106": "ERNIE Speed-AppBuilder",
+    "gpt-4o": "AppBuilder-SDK",
     "gpt-4": "gpt-3.5-turbo",
     "gpt-4-32k": "gpt-4o",
     "gpt-4-1106-preview": "gpt-4-1106-preview",
@@ -118,6 +118,7 @@ MODEL_TOKEN_LIMIT = {
     "gpt-3.5-turbo": 4096,
     "gpt-3.5-turbo-16k": 16384,
     "gpt-3.5-turbo-1106": 16384,
+    "gpt-4o": 8192,
     "gpt-4": 8192,
     "gpt-4-32k": 32768,
     "gpt-4-1106-preview": 128000,
