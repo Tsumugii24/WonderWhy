@@ -4,9 +4,9 @@
 
 <div align="center"><h2>Description</h2></div>
 
-&emsp;&emsp;**WonderWhy** is a cross-platform family education AI application based on large language models (LLMs) and generative AI technology. It aims to help parents better respond to various questions raised by their children, providing a high-quality educational interaction platform for kids. The goal is to guide children to think independently and cultivate proper values by offering inspiring, artistic, accessible, and engaging solutions.
+&emsp;&emsp;**WonderWhy** is a cross-platform family education AI application based on large language models (LLMs) and generative AI technologies. It aims to help parents better respond to various questions raised by their children, providing a high-quality educational interaction platform for kids. The goal is to guide children to think independently and cultivate proper values by offering inspiring, artistic, accessible, and engaging solutions.
 
-&emsp;&emsp;Combining with self-media marketing, WonderWhy creates professional and in-depth scientific parenting solutions. It leverages high-quality information to break down regional educational barriers, reduce educational information disparities, and accelerate educational equity.
+&emsp;&emsp;Combining with self-media marketing, **WonderWhy** creates professional and in-depth scientific parenting solutions. It leverages high-quality information to break down regional educational barriers, reduce educational information disparities, and accelerate educational equity.
 
 
 
