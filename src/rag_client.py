@@ -41,7 +41,6 @@ from src.utils import (
 
 
 
-
 def decode_chat_response(response):
     try:
         error_msg = ""
@@ -145,28 +144,6 @@ class RAGClient(OpenAIClient):
         total_token_count = len(content)
         return content, total_token_count
     
-    # def get_answer_stream_iter(self):
-    #     if not self.api_key:
-    #         raise ValueError("API key is not set")
-    #     response = self._get_response(stream=True)
-    #     if response is not None:
-    #         stream_iter = decode_chat_response(response)
-    #         partial_text = ""
-    #         for chunk in stream_iter:
-    #             partial_text += chunk
-    #             yield partial_text
-    #     else:
-    #         yield STANDARD_ERROR_MSG + GENERAL_ERROR_MSG
-
-    # def get_answer_at_once(self):
-    #     if not self.api_key:
-    #         raise ValueError("API key is not set")
-    #     response = self._get_response()
-    #     response = json.loads(response.text)
-    #     content = response["choices"][0]["message"]["content"]
-    #     total_token_count = response["usage"]["total_tokens"]
-    #     return content, total_token_count
-
 
     # @shared.state.switching_api_key  # 在不开启多账号模式的时候，这个装饰器不会起作用
     def _get_response(self, stream=False):
@@ -189,31 +166,5 @@ class RAGClient(OpenAIClient):
     def billing_info(self):
             status_text = "获取API使用情况失败，未更新ZhipuAI代价代码。"
             return status_text
-            # try:
-            #     curr_time = datetime.datetime.now()
-            #     last_day_of_month = get_last_day_of_month(
-            #         curr_time).strftime("%Y-%m-%d")
-            #     first_day_of_month = curr_time.replace(day=1).strftime("%Y-%m-%d")
-            #     usage_url = f"{shared.state.usage_api_url}?start_date={first_day_of_month}&end_date={last_day_of_month}"
-            #     try:
-            #         usage_data = self._get_billing_data(usage_url)
-            #     except Exception as e:
-            #         logger.warning(f"获取API使用情况失败:" + str(e))
-            #         return i18n("**获取API使用情况失败**")
-            #     rounded_usage = "{:.5f}".format(usage_data["total_usage"] / 100)
-            #     return i18n("**本月使用金额** ") + f"\u3000 ${rounded_usage}"
-            # except requests.exceptions.ConnectTimeout:
-            #     status_text = (
-            #             STANDARD_ERROR_MSG + CONNECTION_TIMEOUT_MSG + ERROR_RETRIEVE_MSG
-            #     )
-            #     return status_text
-            # except requests.exceptions.ReadTimeout:
-            #     status_text = STANDARD_ERROR_MSG + READ_TIMEOUT_MSG + ERROR_RETRIEVE_MSG
-            #     return status_text
-            # except Exception as e:
-            #     import traceback
-            #     traceback.print_exc()
-            #     logger.error(i18n("获取API使用情况失败:") + str(e))
-            #     return STANDARD_ERROR_MSG + ERROR_RETRIEVE_MSG
 
 

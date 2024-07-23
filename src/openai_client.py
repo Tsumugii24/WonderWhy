@@ -165,10 +165,8 @@ class OpenAIClient(BaseLLMModel):
             "Authorization": f"Bearer {openai_api_key}",
             "Content-Type": "application/json",
         }
-        print("history11",history)
         if system_prompt is not None:
             history = [construct_system(system_prompt), *history]
-        print("history2221",history)
 
         payload = {
             "model": self.model_name,
@@ -212,7 +210,7 @@ class OpenAIClient(BaseLLMModel):
                 logger.error(f"Error: {e}")
                 response = None
 
-        print("response in openai ",response, type(response))
+        # print("response in openai ",response, type(response))
         return response
 
     def _refresh_header(self):

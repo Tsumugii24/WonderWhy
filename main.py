@@ -111,6 +111,7 @@ from src.utils import (
 )
 
 from src.gen_image import image_generator
+from src.rag_client import query_knowledge_base
 
 reg_patch()
 
@@ -162,35 +163,7 @@ APPBUILDER_APPID_STUDENT = "93ea3085-0e79-40f0-8e3d-f47381af427a"
 #             )
 #     return mode_selection
 
-def query_knowledge_base(query, kb_name, only_imgs = False):
-    """
-    Call the FastAPI endpoint to query the knowledge base.
 
-    Args:
-        query (str): The query to send to the knowledge base.
-        kb_name (str): The name of the knowledge base.
-    
-    Returns:
-        dict: The response from the API.
-    """
-    url = "http://127.0.0.1:8000/v1/kb/chat_kb"  # Adjust the URL to your FastAPI server
-
-    data = {
-        "query": query,
-        "kb_name": kb_name,
-        "only_images": only_imgs
-    }
-    logger.info(f"Sending request to {url} with data: {data}")
-    response = requests.post(url, json=data)
-
-    if response.status_code == 200:
-        logger.info("Request successful.")
-        return response.json()
-    else:
-        logger.error(f"Request failed with status code {response.status_code}: {response.text}")
-        # raise Exception(f"Failed to query knowledge base: {response.text}")
-        return {"msg": "error"}
-    
 
 
 def generate_local_image(prompt):

@@ -6,33 +6,24 @@ import os
 import sys
 import re
 from typing import List, Optional, Any, Dict
-from fastapi import APIRouter, HTTPException
 from pathlib import Path
+__dir__=os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(__dir__,"../")))
+
 from loguru import logger
-
-from llama_index.core import VectorStoreIndex, StorageContext, load_index_from_storage, Settings
+from fastapi import APIRouter, HTTPException
+# from llama_index.llms.ollama import Ollama
+# from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.llms.openai import OpenAI
+from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.vector_stores.faiss import FaissVectorStore
+from llama_index.core import VectorStoreIndex, StorageContext, load_index_from_storage, Settings
 
-from llama_index.llms.ollama import Ollama
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-
-
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VECTOR_STORE_DIR = os.path.join(ROOT_DIR, "vector_store")
-
-
-rag_router = APIRouter()
-
+from src.index_func import ChineseRecursiveTextSplitter
 
 from tqdm import tqdm
 
-from pathlib import Path
-from llama_index.core.node_parser import SentenceWindowNodeParser
-from llama_index.core import Settings
 import faiss
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from llama_index.llms.ollama import Ollama
-from llama_index.core.node_parser import SimpleFileNodeParser
 from llama_index.readers.file import FlatReader
 from llama_index.core.node_parser import MarkdownNodeParser
 from llama_index.core.schema import Document
@@ -44,20 +35,32 @@ from llama_index.core import (
     VectorStoreIndex,
     StorageContext,
 )
-
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from llama_index.core.node_parser import LangchainNodeParser
-
 from pydantic import BaseModel
 
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+VECTOR_STORE_DIR = os.path.join(ROOT_DIR, "vector_store")
+API_KEY = os.getenv("openai_api_key")
+API_BASE = os.getenv("openai_api_base")
+MODEL_NAME = os.getenv("default_model", "gpt-3.5-turbo")
+
+
+rag_router = APIRouter()
 KB_ENGINES: Dict[str, Any] = {}
-OLLAMA_URL="http://localhost:11434"
-llm = Ollama(model="qwen", base_url=OLLAMA_URL, temperature=0,  request_timeout=120)
-embed_model = HuggingFaceEmbedding(
-    model_name = "/home/jhx/Projects/pretrained_models/bge-m3/",
-    cache_folder="./",
-    embed_batch_size=64,
-)
+
+
+EMBED_DIM = 1536
+CHUNK_SIZE = 1024
+EMBED_BSZ = 10
+# OLLAMA_URL="http://localhost:11434"
+# llm = Ollama(model="qwen", base_url=OLLAMA_URL, temperature=0,  request_timeout=120)
+# embed_model = HuggingFaceEmbedding(
+#     model_name = "/path/to/bge-m3/",
+#     cache_folder="./",
+#     embed_batch_size=EMBED_BSZ,
+# )
+llm = OpenAI(model=MODEL_NAME, api_key=API_KEY, api_base=API_BASE)
+embed_model = OpenAIEmbedding(embed_batch_size=EMBED_BSZ,api_key=API_KEY, api_base=API_BASE)
 
 Settings.llm = llm
 Settings.embed_model = embed_model
@@ -66,96 +69,14 @@ Settings.embed_model = embed_model
 class IngestionRequest(BaseModel):
     document_dir: str
     kb_name: str
-    save_images: bool = False  # 新增的参数，默认值为 False
+    save_images: bool = False  # 是否保存图片索引
 
 class ChatRequest(BaseModel):
     query: str
     kb_name: str
     topk: int = 3  
-    only_images: bool = False  # 用于指示是否仅仅检索图片，默认值为 False
+    only_images: bool = False  # 是否仅仅检索图片
 
-class ChineseRecursiveTextSplitter(RecursiveCharacterTextSplitter):
-    """Recursive text splitter for Chinese text.
-    copy from: https://github.com/chatchat-space/Langchain-Chatchat/tree/master
-    """
-
-    def __init__(
-            self,
-            separators: Optional[List[str]] = None,
-            keep_separator: bool = True,
-            is_separator_regex: bool = True,
-            **kwargs: Any,
-    ) -> None:
-        """Create a new TextSplitter."""
-        super().__init__(keep_separator=keep_separator, **kwargs)
-        self._separators = separators or [
-            "\n\n",
-            "\n",
-            "。|！|？",
-            "\.\s|\!\s|\?\s",
-            "；|;\s",
-            "，|,\s"
-        ]
-        self._is_separator_regex = is_separator_regex
-
-    @staticmethod
-    def _split_text_with_regex_from_end(
-            text: str, separator: str, keep_separator: bool
-    ) -> List[str]:
-        # Now that we have the separator, split the text
-        if separator:
-            if keep_separator:
-                # The parentheses in the pattern keep the delimiters in the result.
-                _splits = re.split(f"({separator})", text)
-                splits = ["".join(i) for i in zip(_splits[0::2], _splits[1::2])]
-                if len(_splits) % 2 == 1:
-                    splits += _splits[-1:]
-            else:
-                splits = re.split(separator, text)
-        else:
-            splits = list(text)
-        return [s for s in splits if s != ""]
-
-    def _split_text(self, text: str, separators: List[str]) -> List[str]:
-        """Split incoming text and return chunks."""
-        final_chunks = []
-        # Get appropriate separator to use
-        separator = separators[-1]
-        new_separators = []
-        for i, _s in enumerate(separators):
-            _separator = _s if self._is_separator_regex else re.escape(_s)
-            if _s == "":
-                separator = _s
-                break
-            if re.search(_separator, text):
-                separator = _s
-                new_separators = separators[i + 1:]
-                break
-
-        _separator = separator if self._is_separator_regex else re.escape(separator)
-        splits = self._split_text_with_regex_from_end(text, _separator, self._keep_separator)
-
-        # Now go merging things, recursively splitting longer texts.
-        _good_splits = []
-        _separator = "" if self._keep_separator else separator
-        for s in splits:
-            if self._length_function(s) < self._chunk_size:
-                _good_splits.append(s)
-            else:
-                if _good_splits:
-                    merged_text = self._merge_splits(_good_splits, _separator)
-                    final_chunks.extend(merged_text)
-                    _good_splits = []
-                if not new_separators:
-                    final_chunks.append(s)
-                else:
-                    other_info = self._split_text(s, new_separators)
-                    final_chunks.extend(other_info)
-        if _good_splits:
-            merged_text = self._merge_splits(_good_splits, _separator)
-            final_chunks.extend(merged_text)
-        return [re.sub(r"\n{2,}", "\n", chunk.strip()) for chunk in final_chunks if chunk.strip() != ""]
-    
 
 def find_markdown_files(directory, recursive=True):
     """
@@ -242,10 +163,8 @@ def vectorize_and_store(files, kb_name, save_images):
     kb_imgs_path = Path(VECTOR_STORE_DIR) / f"{kb_name}_imgs"
 
     Settings.embed_model = embed_model
-    d = 1024
-    faiss_index = faiss.IndexFlatL2(d)
-    chunk_size = 1024
-    zh_node_parser = LangchainNodeParser(ChineseRecursiveTextSplitter(chunk_size = chunk_size, chunk_overlap= 50))
+    faiss_index = faiss.IndexFlatL2(EMBED_DIM)
+    zh_node_parser = LangchainNodeParser(ChineseRecursiveTextSplitter(chunk_size = CHUNK_SIZE, chunk_overlap= 50))
 
     # load nodes
     all_nodes = []
@@ -273,7 +192,7 @@ def vectorize_and_store(files, kb_name, save_images):
         for node in md_nodes:
             text = node.text
             node_id = node.node_id
-            if len(text) <= chunk_size:
+            if len(text) <= CHUNK_SIZE:
                 nodes.append(node)
             else:
                 doc = Document(text = text, id_ = node_id)
