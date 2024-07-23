@@ -19,7 +19,6 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.vector_stores.faiss import FaissVectorStore
 from llama_index.core import VectorStoreIndex, StorageContext, load_index_from_storage, Settings
 
-from src.index_func import ChineseRecursiveTextSplitter
 
 from tqdm import tqdm
 
@@ -37,6 +36,8 @@ from llama_index.core import (
 )
 from llama_index.core.node_parser import LangchainNodeParser
 from pydantic import BaseModel
+from utils import ChineseRecursiveTextSplitter
+
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VECTOR_STORE_DIR = os.path.join(ROOT_DIR, "vector_store")
