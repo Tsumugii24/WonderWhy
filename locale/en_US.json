@@ -11,7 +11,7 @@
     "选择模型": "Select Model",
     "选择LoRA模型": "Select LoRA Model",
     "实时传输回答": "Stream output",
-    "单轮对话": "Single-turn dialogue",
+    "RAG": "RAG",
     "使用在线搜索": "Use online search",
     "选择回复语言（针对搜索&索引功能）": "Select reply language (for search & index)",
     "上传索引文件": "Upload",

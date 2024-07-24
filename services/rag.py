@@ -12,8 +12,8 @@ sys.path.append(os.path.abspath(os.path.join(__dir__,"../")))
 
 from loguru import logger
 from fastapi import APIRouter, HTTPException
-# from llama_index.llms.ollama import Ollama
-# from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.llms.ollama import Ollama
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.vector_stores.faiss import FaissVectorStore
@@ -50,18 +50,20 @@ rag_router = APIRouter()
 KB_ENGINES: Dict[str, Any] = {}
 
 
-EMBED_DIM = 1536
+EMBED_DIM = 1024
+# EMBED_DIM = 1536
 CHUNK_SIZE = 1024
-EMBED_BSZ = 10
-# OLLAMA_URL="http://localhost:11434"
-# llm = Ollama(model="qwen", base_url=OLLAMA_URL, temperature=0,  request_timeout=120)
-# embed_model = HuggingFaceEmbedding(
-#     model_name = "/path/to/bge-m3/",
-#     cache_folder="./",
-#     embed_batch_size=EMBED_BSZ,
-# )
-llm = OpenAI(model=MODEL_NAME, api_key=API_KEY, api_base=API_BASE)
-embed_model = OpenAIEmbedding(embed_batch_size=EMBED_BSZ,api_key=API_KEY, api_base=API_BASE)
+EMBED_BSZ = 64
+OLLAMA_URL="http://localhost:11434"
+llm = Ollama(model="qwen", base_url=OLLAMA_URL, temperature=0,  request_timeout=120)
+embed_model = HuggingFaceEmbedding(
+    # model_name = "/path/to/bge-m3/",
+    model_name = "/home/jhx/Projects/pretrained_models/bge-m3/",
+    cache_folder="./",
+    embed_batch_size=EMBED_BSZ,
+)
+# llm = OpenAI(model=MODEL_NAME, api_key=API_KEY, api_base=API_BASE)
+# embed_model = OpenAIEmbedding(embed_batch_size=EMBED_BSZ,api_key=API_KEY, api_base=API_BASE)
 
 Settings.llm = llm
 Settings.embed_model = embed_model

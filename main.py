@@ -4,7 +4,6 @@ from loguru import logger   # 用于日志记录
 # import appbuilder           # 用于构建应用
 import time
 import os
-import requests
 
 from src.config import (
     http_proxy,
@@ -54,7 +53,7 @@ from src.presets import (
     DEFAULT_SYSTEM_PROMPT,
     CHILD_SYSTEM_PROMPT,
     STUDENT_SYSTEM_PROMPT,
-    ADULT_SYSTEM_PROMPT, VIDEO,
+    ADULT_SYSTEM_PROMPT, VIDEO, LIC,
 )
 from src.utils import (
     delete_chat_history,
@@ -79,7 +78,7 @@ from src.utils import (
     dislike,
     toggle_like_btn_visibility,
     set_key,
-    set_single_turn,
+    # set_single_turn,
     hide_middle_chars,
     set_system_prompt,
     start_outputing,
@@ -124,6 +123,27 @@ APPBUILDER_APPID_DEFAULT = "2ef66c07-b4ac-4fb7-adf9-a76b5c80b2b5"
 APPBUILDER_APPID_CHILD = "c2de7a91-e17e-4d31-becf-b5d014156de7"
 APPBUILDER_APPID_STUDENT = "93ea3085-0e79-40f0-8e3d-f47381af427a"
 
+from src.rag_client import RAGClient
+RAG_MODEL = RAGClient(model_name="rag", api_key = "fake_key")
+
+# 初始化模型状态和备份
+current_model = None
+current_model_backup = None
+current_model_state = "current"
+
+
+# query = "有哪些海怪？"
+# # messages = [
+# #     {"role": "system", "content": "You are a helpful assistant skilled in providing accurate and concise information. Your goal is to assist users by answering their questions, offering explanations, and guiding them through problem-solving processes. Always be polite, clear, and considerate of their needs."},
+# #     {"role": "user", "content": query}
+# # ]
+# messages = [
+#     {"role": "user", "content": query}
+# ]
+# RAG_MODEL.history = messages
+# content,_ =RAG_MODEL.get_answer_at_once()
+# logger.info(f"init query: {query}")
+# print(f"content: {str(content)}")
 
 
 # def respond(query, app_selection, chat_history):
@@ -163,9 +183,6 @@ APPBUILDER_APPID_STUDENT = "93ea3085-0e79-40f0-8e3d-f47381af427a"
 #             )
 #     return mode_selection
 
-
-
-
 def generate_local_image(prompt):
     # 模拟生成图片并保存到本地路径
     # 在实际应用中，你需要调用你的图像生成函数并保存图像
@@ -182,7 +199,6 @@ def generate_local_image(prompt):
     # d.text((10,10), prompt, fill=(255,255,0))
     # image.save(local_image_path)
     return local_image_path
-
 
 def on_mode_change(mode, current_model):
     match(mode):
@@ -311,7 +327,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                     with gr.Box(elem_id="chatbot-input-box"):
                         with gr.Row(elem_id="chatbot-input-row"):
                             gr.HTML(get_html("chatbot_more.html").format(
-                                single_turn_label=i18n("单轮对话"),
+                                single_turn_label=i18n("RAG"),
                                 websearch_label=i18n("在线搜索"),
                                 upload_file_label=i18n("上传文件"),
                                 uploaded_files_label=i18n("知识库文件"),
@@ -557,6 +573,8 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                         gr.Markdown(DESCRIPTION)
                         gr.Markdown("#### " + i18n("WonderWhy Demo演示"))
                         gr.Markdown(VIDEO)
+                        gr.Markdown("#### " + i18n("ABOUT WonderWhy&LIC·2024"))
+                        gr.Markdown(LIC)
 
     with gr.Row(elem_id="popup-wrapper"):
         with gr.Box(elem_id="chuanhu-popup"):
@@ -588,7 +606,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                             value=HISTORY_NAME_METHODS[chat_name_method_index],
                         )
                         single_turn_checkbox = gr.Checkbox(label=i18n(
-                            "单轮对话"), value=False, elem_classes="switch-checkbox", elem_id="gr-single-session-cb",
+                            "RAG"), value=False, elem_classes="switch-checkbox", elem_id="gr-single-session-cb",
                             visible=False)
                         # checkUpdateBtn = gr.Button(i18n("🔄 检查更新..."), visible=check_update)
                         logout_btn = gr.Button(i18n("退出用户"), variant="primary", visible=authflag)
@@ -821,6 +839,28 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     keyTxt.change(set_key, [current_model, keyTxt], [
         user_api_key, status_display], api_name="set_key").then(**get_usage_args)
     keyTxt.submit(**get_usage_args)
+    # single_turn_checkbox.change(
+    #     set_single_turn, [current_model, single_turn_checkbox], None, show_progress=False)
+    import copy
+    # current_model_backup = copy.deepcopy(current_model) 
+    current_model_backup = current_model
+    current_model_state = "current"
+    def set_single_turn(current_model, *args):
+        global current_model_backup, current_model_state, RAG_MODEL
+
+        if current_model_state == "current":
+            # 备份当前模型
+            # current_model_backup = current_model
+            # 切换到 RAG 模型
+            logger.info(f"set_single_turn to RAG!!!!!!!!!!")
+            current_model = RAG_MODEL
+            current_model_state = "rag"
+        else:
+            logger.info(f"set_single_turn to GPT!!!!!!!!!!")
+            # 切换回备份的 Current 模型
+            current_model = current_model_backup
+            current_model_state = "current"
+
     single_turn_checkbox.change(
         set_single_turn, [current_model, single_turn_checkbox], None, show_progress=False)
     model_select_dropdown.change(get_model,
