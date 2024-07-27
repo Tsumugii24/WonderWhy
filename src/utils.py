@@ -396,19 +396,19 @@ def save_file(filename, model, chatbot):
         "system": system,
         "history": history,
         "chatbot": chatbot,
-        "model_name": model.model_name,
-        "single_turn": model.single_turn,
-        "temperature": model.temperature,
-        "top_p": model.top_p,
-        "n_choices": model.n_choices,
-        "stop_sequence": model.stop_sequence,
-        "token_upper_limit": model.token_upper_limit,
-        "max_generation_token": model.max_generation_token,
-        "presence_penalty": model.presence_penalty,
-        "frequency_penalty": model.frequency_penalty,
-        "logit_bias": model.logit_bias,
-        "user_identifier": model.user_identifier,
-        "metadata": model.metadata,
+        # "model_name": model.model_name,
+        # "single_turn": model.single_turn,
+        # "temperature": model.temperature,
+        # "top_p": model.top_p,
+        # "n_choices": model.n_choices,
+        # "stop_sequence": model.stop_sequence,
+        # "token_upper_limit": model.token_upper_limit,
+        # "max_generation_token": model.max_generation_token,
+        # "presence_penalty": model.presence_penalty,
+        # "frequency_penalty": model.frequency_penalty,
+        # "logit_bias": model.logit_bias,
+        # "user_identifier": model.user_identifier,
+        # "metadata": model.metadata,
     }
     if not filename == os.path.basename(filename):
         history_file_path = filename
@@ -549,6 +549,7 @@ def get_template_content(templates, selection, original_theme):
         return templates[selection]
     except:
         return original_theme
+
 
 def update_image_text(theme):
     ''' 根据讨论主题(原文)，更新生图描述 '''

@@ -32,7 +32,7 @@ from src.presets import (
     HISTORY_DIR,
     DEFAULT_SYSTEM_PROMPT,
     PROMPT_TEMPLATE,
-    WEBSEARCH_PTOMPT_TEMPLATE,
+    WEBSEARCH_PTOMPT_TEMPLATE, CHILD_SYSTEM_PROMPT,
 )
 from src.search_engine import (
     search_with_google,
@@ -97,7 +97,7 @@ class BaseLLMModel:
     def __init__(
             self,
             model_name,
-            system_prompt=DEFAULT_SYSTEM_PROMPT,
+            system_prompt=CHILD_SYSTEM_PROMPT,
             temperature=1.0,
             top_p=1.0,
             n_choices=1,
@@ -784,7 +784,7 @@ class BaseLLMModel:
             self.chatbot = saved_json["chatbot"]
             return (
                 os.path.basename(self.history_file_path)[:-5],
-                saved_json["system"],
+                # saved_json["system"],
                 saved_json["chatbot"],
                 self.single_turn,
                 self.temperature,

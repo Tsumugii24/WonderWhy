@@ -11,6 +11,7 @@ from loguru import logger
 
 from src import config
 from src.base_model import ModelType
+from src.presets import CHILD_SYSTEM_PROMPT
 from src.utils import (
     hide_middle_chars,
     i18n,
@@ -23,7 +24,7 @@ def get_model(
         access_key=None,
         temperature=None,
         top_p=None,
-        system_prompt=None,
+        system_prompt=CHILD_SYSTEM_PROMPT,
         user_name="",
         original_model=None,
 ):

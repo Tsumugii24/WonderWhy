@@ -23,7 +23,7 @@ from src.presets import (
     ERROR_RETRIEVE_MSG,
     GENERAL_ERROR_MSG,
     CHAT_COMPLETION_URL,
-    SUMMARY_CHAT_SYSTEM_PROMPT
+    SUMMARY_CHAT_SYSTEM_PROMPT, STUDENT_SYSTEM_PROMPT, CHILD_SYSTEM_PROMPT
 )
 from src.utils import (
     count_token,
@@ -77,7 +77,7 @@ class OpenAIClient(BaseLLMModel):
             self,
             model_name,
             api_key,
-            system_prompt=DEFAULT_SYSTEM_PROMPT,
+            system_prompt=CHILD_SYSTEM_PROMPT,
             temperature=1.0,
             top_p=1.0,
             user_name="",

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import gradio as gr         # 用于构建Web界面
-from loguru import logger   # 用于日志记录
+import gradio as gr  # 用于构建Web界面
+from loguru import logger  # 用于日志记录
 # import appbuilder           # 用于构建应用
 import time
 import os
@@ -27,6 +27,7 @@ from src.config import (
 )
 from src.gradio_patch import reg_patch
 from src.models import get_model
+from src.openai_client import OpenAIClient
 from src.overwrites import (
     postprocess,
     postprocess_chat_messages,
@@ -48,13 +49,13 @@ from src.presets import (
     favicon_path,
     API_HOST,
     HISTORY_DIR,
-    assets_path,
+    assets_path, \
     # Prompt
     DEFAULT_SYSTEM_PROMPT,
     CHILD_SYSTEM_PROMPT,
     STUDENT_SYSTEM_PROMPT,
     ADULT_SYSTEM_PROMPT, VIDEO, LIC, PURE_DEFAULT_SYSTEM_PROMPT, PURE_ADULT_SYSTEM_PROMPT, PURE_CHILD_SYSTEM_PROMPT,
-    PURE_STUDENT_SYSTEM_PROMPT,
+    PURE_STUDENT_SYSTEM_PROMPT, INITIAL_SYSTEM_PROMPT,
 )
 from src.utils import (
     delete_chat_history,
@@ -124,7 +125,6 @@ APPBUILDER_APPID_CHILD = "c2de7a91-e17e-4d31-becf-b5d014156de7"
 APPBUILDER_APPID_STUDENT = "93ea3085-0e79-40f0-8e3d-f47381af427a"
 
 
-
 # def respond(query, app_selection, chat_history):
 #     '''
 #     根据用户选择的模式和输入的文本，生成回复
@@ -145,7 +145,7 @@ APPBUILDER_APPID_STUDENT = "93ea3085-0e79-40f0-8e3d-f47381af427a"
 
 #     # 执行对话
 #     msg = builder.run(conversation_id, query)
-    
+
 #     chat_history.append((query, msg.content.answer))
 #     time.sleep(2)
 #     return "", chat_history
@@ -166,7 +166,7 @@ def generate_local_image(prompt):
     # 在实际应用中，你需要调用你的图像生成函数并保存图像
     # 这里我们假设生成的图像保存在 `generated_image.png`
     local_image_path = "generate_image.png"
-    
+
     # 模拟生成图片保存
     # 这里你可以替换为实际的图像生成逻辑
     # from PIL import Image, ImageDraw, ImageFont
@@ -176,6 +176,7 @@ def generate_local_image(prompt):
     # image.save(local_image_path)
     time.sleep(6)
     return local_image_path
+
 
 def on_mode_change(mode, current_model):
     match mode:
@@ -195,6 +196,7 @@ def on_mode_change(mode, current_model):
     current_model.set_system_prompt(prompt)  # 设置模型的Prompt
     return f"已选模式：{mode}\n ---\n Prompt:\n {pure_prompt}"
 
+
 ''' 构建Web界面 '''
 with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     user_name = gr.Textbox("", visible=False)
@@ -206,6 +208,9 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     user_api_key = gr.State(my_api_key)
     current_model = gr.State()
     # mode_selection = mode_switch_ui()
+    # initial_mode = "儿童模式"
+    # client = OpenAIClient(system_prompt=CHILD_SYSTEM_PROMPT)
+    # initial_result = on_mode_change(initial_mode, client)
 
     topic = gr.State(i18n("未命名对话历史记录"))
 
@@ -280,9 +285,10 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                     # 获取模型的别名列表
                     MODEL_ALIASES_LIST = list(MODEL_ALIASES.values())
                     DEFAULT_MODEL_ALIAS = MODEL_ALIASES["gpt-3.5-turbo"]
-                    
+
                     model_select_dropdown = gr.Dropdown(
-                        label=i18n("选择模型"), choices=MODEL_ALIASES_LIST, multiselect=False, value=DEFAULT_MODEL_ALIAS,
+                        label=i18n("选择模型"), choices=MODEL_ALIASES_LIST, multiselect=False,
+                        value=DEFAULT_MODEL_ALIAS,
                         interactive=True,
                         show_label=False, container=False, elem_id="model-select-dropdown"
                     )
@@ -385,11 +391,11 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                                 show_label=True,
                                 placeholder=i18n("输入你想讨论的十万个为什么章节片段"),
                                 label="十万个为什么讨论片段展示",
-                                value=None, # INITIAL_SYSTEM_PROMPT,
+                                value=None,  # INITIAL_SYSTEM_PROMPT,
                                 lines=8
                             )
                             retain_system_prompt_checkbox = gr.Checkbox(
-                                label=i18n("新建对话保留当前讨论主题"), value=False, visible=True, 
+                                label=i18n("新建对话保留当前讨论主题"), value=False, visible=True,
                                 elem_classes="switch-checkbox")
                             with gr.Accordion(label=i18n("加载自定义讨论主题"), open=True):
                                 with gr.Column():
@@ -433,12 +439,14 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                         # gr.Markdown(i18n("## 选择运行模式⚙️"),
                         #             elem_id="mode-selection-info")
                         with gr.Accordion(i18n("模式切换"), open=True):
-                            mode_selection = gr.Radio(choices=["默认模式", "成人模式", "儿童模式", "学生模式"], label=i18n("运行模式"), value="默认模式")
+                            mode_selection = gr.Radio(choices=["默认模式", "成人模式", "儿童模式", "学生模式"],
+                                                      label=i18n("运行模式"), value="默认模式")
                             submit_button = gr.Button(i18n("确认选择"))
-                            result = gr.Textbox(label="模式Prompt", value=DEFAULT_SYSTEM_PROMPT)
-                            submit_button.click(on_mode_change, 
-                                                inputs=[mode_selection, current_model], 
+                            result = gr.Textbox(label="模式Prompt", value=PURE_DEFAULT_SYSTEM_PROMPT)
+                            submit_button.click(on_mode_change,
+                                                inputs=[mode_selection, current_model],
                                                 outputs=result)
+                            # demo.load(on_mode_change, inputs=["儿童模式", current_model], outputs=result)
                         gr.Markdown("---", elem_classes="hr-line")
                         with gr.Accordion(i18n("智能图片生成🏞️"), open=True):
                             # gr.Markdown("## 智能图片生成🏞️")
@@ -446,19 +454,19 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                             image_output = gr.Image(label="古诗文意象图", show_label=False)
                             image_text = gr.Textbox(label="图片生成描述", placeholder=i18n("输入'本地'可查看默认图片"))
                             generate_button = gr.Button("一键生成绘本🖼️")
-                            generate_button.click(image_generator.generate_image, inputs=image_text, outputs=image_output)
-                        gr.Markdown("---", elem_classes="hr-line")   
+                            generate_button.click(image_generator.generate_image, inputs=image_text,
+                                                  outputs=image_output)
+                        gr.Markdown("---", elem_classes="hr-line")
                         gr.Markdown("### 多模态RAG检索参考")
                         # 添加文本输入框用于输入生成图片的文本
                         image_output = gr.Image(label="一键检索图书图像")
                         text_input = gr.Textbox(label="你的描述")
                         generate_button = gr.Button("返回匹配内容")
-                        
+
                         # 做一个假本地返回效果
                         generate_button.click(generate_local_image, inputs=text_input, outputs=image_output)
-  
 
-                    # with gr.Tab(label=i18n("参数")):
+                        # with gr.Tab(label=i18n("参数")):
                         # gr.Markdown(i18n("# ⚠️ 务必谨慎更改 ⚠️"),
                         #             elem_id="advanced-warning")
                         # with gr.Accordion(i18n("参数"), open=True):
@@ -676,7 +684,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
         return user_info, user_name, current_model, toggle_like_btn_visibility(
             DEFAULT_MODEL), *loaded_stuff, init_history_list(user_name, prepend=current_model.history_file_path[:-5])
 
-    
+
     demo.load(create_greeting, inputs=None, outputs=[
         user_info, user_name, current_model, like_dislike_area, saveFileName, theme, chatbot,
         single_turn_checkbox, temperature_slider, top_p_slider, n_choices_slider, stop_sequence_txt,
@@ -725,7 +733,8 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     load_history_from_file_args = dict(
         fn=load_chat_history,
         inputs=[current_model, historySelectList],
-        outputs=[saveFileName, theme, chatbot, single_turn_checkbox, temperature_slider, top_p_slider,
+        # outputs=[saveFileName, theme, chatbot, single_turn_checkbox, temperature_slider, top_p_slider,
+        outputs=[saveFileName, chatbot, single_turn_checkbox, temperature_slider, top_p_slider,
                  n_choices_slider, stop_sequence_txt, max_context_length_slider, max_generation_slider,
                  presence_penalty_slider, frequency_penalty_slider, logit_bias_txt, user_identifier_txt],
     )
@@ -816,7 +825,6 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     # 生图
     theme.change(update_image_text, [theme], [image_text])
 
-
     # LLM Models
     keyTxt.change(set_key, [current_model, keyTxt], [
         user_api_key, status_display], api_name="set_key").then(**get_usage_args)
@@ -845,11 +853,10 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     )
     templateSelectDropdown.change(
         get_template_content,
-        [promptTemplates, templateSelectDropdown, theme], 
-        [theme],  
+        [promptTemplates, templateSelectDropdown, theme],
+        [theme],
         show_progress=True,
     )
-
 
     # # Template
     # systemPromptTxt.change(set_system_prompt, [
@@ -868,7 +875,6 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     #     [systemPromptTxt],
     #     show_progress=True,
     # )
-
 
     # S&L
     renameHistoryBtn.click(
@@ -950,7 +956,8 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     historySelectBtn.click(  # This is an experimental feature... Not actually used.
         fn=load_chat_history,
         inputs=[current_model, historySelectList],
-        outputs=[saveFileName, theme, chatbot, single_turn_checkbox, temperature_slider, top_p_slider,
+        # outputs=[saveFileName, theme, chatbot, single_turn_checkbox, temperature_slider, top_p_slider,
+        outputs=[saveFileName, chatbot, single_turn_checkbox, temperature_slider, top_p_slider,
                  n_choices_slider, stop_sequence_txt, max_context_length_slider, max_generation_slider,
                  presence_penalty_slider, frequency_penalty_slider, logit_bias_txt, user_identifier_txt],
         _js='(a,b)=>{return bgSelectHistory(a,b);}'
