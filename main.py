@@ -193,7 +193,7 @@ def on_mode_change(mode, current_model):
             pure_prompt = PURE_STUDENT_SYSTEM_PROMPT
 
     current_model.set_system_prompt(prompt)  # 设置模型的Prompt
-    return f"已选模式：{mode}\n ---\n Prompt:\n {prompt}\n Prompt:\n {pure_prompt}"
+    return f"已选模式：{mode}\n ---\n Prompt:\n {pure_prompt}"
 
 ''' 构建Web界面 '''
 with gr.Blocks(theme=small_and_beautiful_theme) as demo:
