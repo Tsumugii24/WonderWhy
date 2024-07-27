@@ -39,7 +39,7 @@ POETRY_THEME_INFO = """静夜思
 床前明月光，疑是地上霜。
 举头望明月，低头思故乡。"""
 # INITIAL_SYSTEM_PROMPT = prompt.default_system_prompt
-DEFAULT_SYSTEM_PROMPT = prompt.default_system_prompt
+DEFAULT_SYSTEM_PROMPT = prompt.default_system_prompt[len(ernie_prompt):]
 PURE_DEFAULT_SYSTEM_PROMPT = prompt.default_system_prompt[len(ernie_prompt):]
 CHILD_SYSTEM_PROMPT = prompt.child_system_prompt
 PURE_CHILD_SYSTEM_PROMPT = prompt.child_system_prompt[len(ernie_prompt):]
