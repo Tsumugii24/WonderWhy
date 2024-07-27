@@ -38,7 +38,7 @@ POETRY_THEME_INFO = """静夜思
 床前明月光，疑是地上霜。
 举头望明月，低头思故乡。"""
 # INITIAL_SYSTEM_PROMPT = prompt.default_system_prompt
-DEFAULT_SYSTEM_PROMPT = prompt.system_prompt
+DEFAULT_SYSTEM_PROMPT = prompt.default_system_prompt
 CHILD_SYSTEM_PROMPT = prompt.child_system_prompt
 STUDENT_SYSTEM_PROMPT = prompt.student_system_prompt
 ADULT_SYSTEM_PROMPT = prompt.adult_system_prompt
@@ -106,13 +106,13 @@ ONLINE_MODELS = [
 MODEL_ALIASES = {
     "gpt-3.5-turbo": "ERNIE-3.5-8K",
     "gpt-3.5-turbo-16k": "ERNIE-4.0-8K",
-    "gpt-3.5-turbo-1106": "ERNIE Speed-AppBuilder",
-    "gpt-4o": "AppBuilder-SDK",
-    "gpt-4": "gpt-3.5-turbo",
-    "gpt-4-32k": "gpt-4o",
-    "gpt-4-1106-preview": "gpt-4o-mini",
-    "gpt-4-turbo-preview": "gpt-4-turbo",
-    "gpt-4-vision-preview": "gpt-4-vision",
+    # "gpt-3.5-turbo-1106": "ERNIE Speed-AppBuilder",
+    # "gpt-4o": "AppBuilder-SDK",
+    # "gpt-4": "gpt-3.5-turbo",
+    # "gpt-4-32k": "gpt-4o",
+    # "gpt-4-1106-preview": "gpt-4o-mini",
+    # "gpt-4-turbo-preview": "gpt-4-turbo",
+    # "gpt-4-vision-preview": "gpt-4-vision",
 }
 
 MODEL_TOKEN_LIMIT = {
