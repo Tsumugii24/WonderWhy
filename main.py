@@ -53,7 +53,8 @@ from src.presets import (
     DEFAULT_SYSTEM_PROMPT,
     CHILD_SYSTEM_PROMPT,
     STUDENT_SYSTEM_PROMPT,
-    ADULT_SYSTEM_PROMPT, VIDEO, LIC,
+    ADULT_SYSTEM_PROMPT, VIDEO, LIC, PURE_DEFAULT_SYSTEM_PROMPT, PURE_ADULT_SYSTEM_PROMPT, PURE_CHILD_SYSTEM_PROMPT,
+    PURE_STUDENT_SYSTEM_PROMPT,
 )
 from src.utils import (
     delete_chat_history,
@@ -179,17 +180,17 @@ def generate_local_image(prompt):
 def on_mode_change(mode, current_model):
     match mode:
         case "默认模式":
-            prompt = current_model.prompt.default_system_prompt
-            pure_prompt = current_model.prompt.get_pure_prompt("默认模式")
+            prompt = DEFAULT_SYSTEM_PROMPT
+            pure_prompt = PURE_DEFAULT_SYSTEM_PROMPT
         case "成人模式":
-            prompt = current_model.prompt.adult_system_prompt
-            pure_prompt = current_model.prompt.get_pure_prompt("成人模式")
+            prompt = ADULT_SYSTEM_PROMPT
+            pure_prompt = PURE_ADULT_SYSTEM_PROMPT
         case "儿童模式":
-            prompt = current_model.prompt.child_system_prompt
-            pure_prompt = current_model.prompt.get_pure_prompt("儿童模式")
+            prompt = CHILD_SYSTEM_PROMPT
+            pure_prompt = PURE_CHILD_SYSTEM_PROMPT
         case "学生模式":
-            prompt = current_model.prompt.student_system_prompt
-            pure_prompt = current_model.prompt.get_pure_prompt("学生模式")
+            prompt = STUDENT_SYSTEM_PROMPT
+            pure_prompt = PURE_STUDENT_SYSTEM_PROMPT
 
     current_model.set_system_prompt(prompt)  # 设置模型的Prompt
     return f"已选模式：{mode}\n ---\n Prompt:\n {prompt}\n Prompt:\n {pure_prompt}"

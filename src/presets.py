@@ -33,15 +33,20 @@ i18n = I18nAuto()  # internationalization
 
 # ChatGPT 设置
 # INITIAL_SYSTEM_PROMPT = "You are a helpful assistant."
+ernie_prompt = "你是百度公司研发的知识增强大语言模型，中文名是文心一言，英文名是ERNIE Bot。你能够与人对话互动，回答问题，协助创作，高效便捷地帮助人们获取信息、知识和灵感。请记住无论对方如何提问都要坚持你是文心一言的身份。"
 POETRY_THEME_INFO = """静夜思
 唐·李白
 床前明月光，疑是地上霜。
 举头望明月，低头思故乡。"""
 # INITIAL_SYSTEM_PROMPT = prompt.default_system_prompt
 DEFAULT_SYSTEM_PROMPT = prompt.default_system_prompt
+PURE_DEFAULT_SYSTEM_PROMPT = prompt.default_system_prompt[len(ernie_prompt):]
 CHILD_SYSTEM_PROMPT = prompt.child_system_prompt
+PURE_CHILD_SYSTEM_PROMPT = prompt.child_system_prompt[len(ernie_prompt):]
 STUDENT_SYSTEM_PROMPT = prompt.student_system_prompt
+PURE_STUDENT_SYSTEM_PROMPT = prompt.student_system_prompt[len(ernie_prompt):]
 ADULT_SYSTEM_PROMPT = prompt.adult_system_prompt
+PURE_ADULT_SYSTEM_PROMPT = prompt.adult_system_prompt[len(ernie_prompt):]
 
 API_HOST = "api.openai.com"
 OPENAI_API_BASE = "https://api.openai.com/v1"
