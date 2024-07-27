@@ -1,0 +1,17 @@
+{
+    "openai_api_key": "sk-example",
+    "openai_api_base": "https://apikeyplus.com/v1",
+    "language": "auto",
+    "hide_history_when_not_logged_in": true,
+    "default_model":  "gpt-3.5-turbo",  
+    "multi_api_key": false,
+    "server_name": "127.0.0.1",
+    "server_port": 8010,
+    "autobrowser": false,
+    "share": false,
+    "websearch_engine": "bing",
+    "sparkdesk_appid": "YOUR_APPID",
+    "sparkdesk_apisecret": "YOUR_APISECREY",
+    "sparkdesk_apikey": "YOUR_APIKEY",
+    "bing_search_api_key": "YOUR_BING_APIKEY"
+}
