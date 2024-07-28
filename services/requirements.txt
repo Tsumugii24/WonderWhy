@@ -1,0 +1,8 @@
+loguru
+llama-index
+llama-index-vector-stores-faiss
+faiss-gpu
+llama-index-llms-openai
+llama-index-embeddings-openai
+llama-index-retrievers-bm25
+zhipuai
