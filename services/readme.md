@@ -30,11 +30,12 @@ python services/run.py
 ```
 
 ## 3. 建立向量索引
-> processed_data:https://huggingface.co/datasets/miugod/lic_md
 使用zhipu的glm-4模型，对processed_data目录下的所有Markdown文件进行向量化处理。以下是具体步骤：
 
 3.1 向量化处理
 执行以下命令，将Markdown文件向量化并存储到指定的知识库中：
+> processed_data:https://huggingface.co/datasets/miugod/lic_md
+> 已经storage后的目录为vector_store
 > lic_md/processed_data/路径根据自己路径修改
 
 ```bash
