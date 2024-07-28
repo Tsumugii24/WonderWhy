@@ -36,7 +36,7 @@ from llama_index.core import (
 )
 from llama_index.core.node_parser import LangchainNodeParser
 from pydantic import BaseModel
-from utils import ChineseRecursiveTextSplitter
+from utils import ChineseRecursiveTextSplitter, ZhipuAIEmbeddings, ZhipuAILLM
 
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,6 +44,7 @@ VECTOR_STORE_DIR = os.path.join(ROOT_DIR, "vector_store")
 API_KEY = os.getenv("openai_api_key")
 API_BASE = os.getenv("openai_api_base")
 MODEL_NAME = os.getenv("default_model", "gpt-3.5-turbo")
+ZHIPUAI_API_KEY = os.getenv("zhipuai_api_key")
 
 
 rag_router = APIRouter()
@@ -53,17 +54,39 @@ KB_ENGINES: Dict[str, Any] = {}
 EMBED_DIM = 1024
 # EMBED_DIM = 1536
 CHUNK_SIZE = 1024
-EMBED_BSZ = 64
-OLLAMA_URL="http://localhost:11434"
-llm = Ollama(model="qwen", base_url=OLLAMA_URL, temperature=0,  request_timeout=120)
-embed_model = HuggingFaceEmbedding(
-    # model_name = "/path/to/bge-m3/",
-    model_name = "/home/jhx/Projects/pretrained_models/bge-m3/",
-    cache_folder="./",
-    embed_batch_size=EMBED_BSZ,
-)
+EMBED_BSZ = 2
+
+
+
+# todo: zhipu llm
+
+
+## LLM
+# OLLAMA_URL="http://localhost:11434"
+# llm = Ollama(model="qwen", base_url=OLLAMA_URL, temperature=0,  request_timeout=120)
 # llm = OpenAI(model=MODEL_NAME, api_key=API_KEY, api_base=API_BASE)
+
+# from llama_index.legacy.llms import OpenAILike as OpenAI
+# llm = OpenAI(
+#     api_key=ZHIPUAI_API_KEY,
+#     model="glm-4",
+#     api_base="https://open.bigmodel.cn/api/paas/v4/",
+#     is_chat_model=True,
+# )
+llm = ZhipuAILLM(model_name="glm-4", api_key=ZHIPUAI_API_KEY)
+
+
+## EMBED MODEL
+embed_model = ZhipuAIEmbeddings(embed_batch_size=EMBED_BSZ,api_key=ZHIPUAI_API_KEY)
+# embed_model = HuggingFaceEmbedding(
+#     # model_name = "/path/to/bge-m3/",
+#     model_name = "/home/jhx/Projects/pretrained_models/bge-m3/",
+#     cache_folder="./",
+#     embed_batch_size=EMBED_BSZ,
+# )
 # embed_model = OpenAIEmbedding(embed_batch_size=EMBED_BSZ,api_key=API_KEY, api_base=API_BASE)
+
+
 
 Settings.llm = llm
 Settings.embed_model = embed_model
@@ -167,6 +190,7 @@ def vectorize_and_store(files, kb_name, save_images):
 
     Settings.embed_model = embed_model
     faiss_index = faiss.IndexFlatL2(EMBED_DIM)
+    faiss_index_imgs = faiss.IndexFlatL2(EMBED_DIM)
     zh_node_parser = LangchainNodeParser(ChineseRecursiveTextSplitter(chunk_size = CHUNK_SIZE, chunk_overlap= 50))
 
     # load nodes
@@ -215,7 +239,7 @@ def vectorize_and_store(files, kb_name, save_images):
     # index
     if save_images:
         logger.info(f"Building images index ing...")
-        vector_store_imgs = FaissVectorStore(faiss_index=faiss_index)
+        vector_store_imgs = FaissVectorStore(faiss_index=faiss_index_imgs)
         storage_context_imgs = StorageContext.from_defaults(vector_store=vector_store_imgs)
         index_imgs = VectorStoreIndex(all_img_nodes, storage_context=storage_context_imgs, embed_model=embed_model, show_progress=True) # store_nodes_override似乎是存储nodes，但是没起到作用
 
@@ -334,8 +358,12 @@ async def generate_answer(request: ChatRequest):
             return ret
 
         else:
-            query_engine = KB_ENGINES.get(kb_name)["query_engine"] 
-            answer = query_engine.query(query)
+            try:
+                query_engine = KB_ENGINES.get(kb_name)["query_engine"] 
+                answer = query_engine.query(query)
+            except Exception as e:
+                logger.info(f"error : {str(e)}")
+                answer = "error"
             return {"query": query, "answer": str(answer)}
         
     except Exception as e:

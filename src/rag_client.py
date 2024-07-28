@@ -40,7 +40,6 @@ from src.utils import (
 )
 
 
-
 def decode_chat_response(response):
     try:
         error_msg = ""

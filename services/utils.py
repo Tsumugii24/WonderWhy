@@ -5,6 +5,21 @@ from typing import List, Optional, Any
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 
+from llama_index.core.bridge.pydantic import PrivateAttr
+from llama_index.core.embeddings import BaseEmbedding
+from llama_index.core.llms import (
+    CustomLLM,
+    CompletionResponse,
+    CompletionResponseGen,
+    LLMMetadata,
+)
+from llama_index.core.llms.callbacks import llm_completion_callback
+from llama_index.core.bridge.pydantic import PrivateAttr
+
+
+from zhipuai import ZhipuAI
+
+
 def set_api_key_from_json(json_file_path):
     try:
         # 打开并读取JSON文件
@@ -15,8 +30,11 @@ def set_api_key_from_json(json_file_path):
         api_key= data.get('openai_api_key','sk-')
         api_base= data.get('openai_api_base','https://apikeyplus.com/v1')
         model_name= data.get('default_model','gpt-3.5-turbo')
+        zhipuai_api_key= data.get('zhipuai_api_key','gpt-3.5-turbo')
+
 
         # 设置环境变量
+        os.environ['zhipuai_api_key'] = zhipuai_api_key
         os.environ['openai_api_key'] = api_key
         os.environ['openai_api_base'] = api_base
         os.environ['default_model'] = model_name
@@ -111,3 +129,135 @@ class ChineseRecursiveTextSplitter(RecursiveCharacterTextSplitter):
             final_chunks.extend(merged_text)
         return [re.sub(r"\n{2,}", "\n", chunk.strip()) for chunk in final_chunks if chunk.strip() != ""]
 
+
+
+
+
+class ZhipuAIEmbeddings(BaseEmbedding):
+    _client: ZhipuAI = PrivateAttr()
+    _api_key: str = PrivateAttr()
+    
+    def __init__(
+        self,
+        model_name: str = "embedding-2",
+        api_key: str = "",
+        **kwargs: Any,
+    ) -> None:
+        # self.model_name = model_name
+        self._client = None
+        self._api_key = api_key
+
+        super().__init__(model_name=model_name, **kwargs)
+
+
+    def _get_client(self) -> ZhipuAI:
+        if self._client is None:
+            self._client = ZhipuAI(api_key= self._api_key)
+        return self._client
+    
+    @classmethod
+    def class_name(cls) -> str:
+        return "ZhipuAIEmbeddings"
+
+    async def _aget_query_embedding(self, query: str) -> List[float]:
+        return self._get_query_embedding(query)
+
+    async def _aget_text_embedding(self, text: str) -> List[float]:
+        return self._get_text_embedding(text)
+
+    def _get_query_embedding(self, query: str) -> List[float]:
+        response = self._get_client().embeddings.create(
+                        model=self.model_name, 
+                        input=query
+                        )
+        embedding = response.data[0].embedding
+
+        return embedding
+
+    def _get_text_embedding(self, text: str) -> List[float]:
+        response = self._get_client().embeddings.create(
+                        model=self.model_name, 
+                        input=text
+                        )
+        embedding = response.data[0].embedding
+
+        return embedding
+    
+    def _get_text_embeddings(self, texts: List[str]) -> List[List[float]]:
+        response = self._get_client().embeddings.create(
+                        model=self.model_name, 
+                        input=texts
+                        )
+        embeddings = [data.embedding for data in response.data]
+
+        return embeddings
+    
+
+class ZhipuAILLM(CustomLLM):
+    context_window: int = 3900
+    num_output: int = 256
+    model_name: str = "glm-4"
+
+    _client: ZhipuAI = PrivateAttr()
+    _api_key: str = PrivateAttr()
+
+    def __init__(
+        self,
+        model_name: str = "glm-4",
+        api_key: str = "",
+        **kwargs: Any,
+    ) -> None:
+        # self.model_name = model_name
+        self._client = None
+        self._api_key = api_key
+
+        super().__init__(model_name=model_name, **kwargs)
+
+    def _get_client(self) -> ZhipuAI:
+        if self._client is None:
+            self._client = ZhipuAI(api_key= self._api_key)
+        return self._client
+
+    @property
+    def metadata(self) -> LLMMetadata:
+        """Get LLM metadata."""
+        return LLMMetadata(
+            context_window=self.context_window,
+            num_output=self.num_output,
+            model_name=self.model_name,
+        )
+
+    @llm_completion_callback()
+    def complete(self, prompt: str, **kwargs: Any) -> CompletionResponse:
+        messages=[
+            {"role": "system", "content": "你是一个乐于解答各种问题的助手，你的任务是为用户提供专业、准确、有见地的建议。"},
+            {"role": "user", "content": prompt},
+        ]
+    
+        response = self._get_client().chat.completions.create(
+            model = self.model_name,
+            messages= messages,
+            stream=False
+        )
+        content = response.choices[0].message.content
+        return CompletionResponse(text= content)
+
+    @llm_completion_callback()
+    def stream_complete(
+        self, prompt: str, **kwargs: Any
+    ) -> CompletionResponseGen:
+        messages=[
+            {"role": "system", "content": "你是一个乐于解答各种问题的助手，你的任务是为用户提供专业、准确、有见地的建议。"},
+            {"role": "user", "content": prompt},
+        ]
+    
+        response = self._get_client().chat.completions.create(
+            model = self.model_name,
+            messages= messages,
+            stream=True
+        )
+        resp = ""
+        for chunk in response:
+            delta = chunk.choices[0].delta
+            resp += delta
+            yield CompletionResponse(text = resp, delta=delta)

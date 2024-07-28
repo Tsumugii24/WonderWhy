@@ -4,6 +4,8 @@ from loguru import logger   # 用于日志记录
 # import appbuilder           # 用于构建应用
 import time
 import os
+import copy
+
 
 from src.config import (
     http_proxy,
@@ -841,7 +843,6 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
     keyTxt.submit(**get_usage_args)
     # single_turn_checkbox.change(
     #     set_single_turn, [current_model, single_turn_checkbox], None, show_progress=False)
-    import copy
     # current_model_backup = copy.deepcopy(current_model) 
     current_model_backup = current_model
     current_model_state = "current"
@@ -852,11 +853,11 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
             # 备份当前模型
             # current_model_backup = current_model
             # 切换到 RAG 模型
-            logger.info(f"set_single_turn to RAG!!!!!!!!!!")
+            logger.info(f"set_single_turn to RAG")
             current_model = RAG_MODEL
             current_model_state = "rag"
         else:
-            logger.info(f"set_single_turn to GPT!!!!!!!!!!")
+            logger.info(f"set_single_turn to GPT")
             # 切换回备份的 Current 模型
             current_model = current_model_backup
             current_model_state = "current"
