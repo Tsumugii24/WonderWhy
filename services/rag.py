@@ -13,7 +13,7 @@ sys.path.append(os.path.abspath(os.path.join(__dir__,"../")))
 from loguru import logger
 from fastapi import APIRouter, HTTPException
 from llama_index.llms.ollama import Ollama
-from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+# from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.vector_stores.faiss import FaissVectorStore
@@ -54,7 +54,7 @@ KB_ENGINES: Dict[str, Any] = {}
 EMBED_DIM = 1024
 # EMBED_DIM = 1536
 CHUNK_SIZE = 1024
-EMBED_BSZ = 2
+EMBED_BSZ = 4
 
 
 

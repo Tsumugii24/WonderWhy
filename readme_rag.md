@@ -52,7 +52,7 @@ hfd BAAI/bge-m3 --local-dir models/bge
 
 ```shell
 python main.py
-python python sunny.py  --clientid=0118xxxxxxx
+python sunny.py  --clientid=0118xxxxxxx
 ```
 
 

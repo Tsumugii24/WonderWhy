@@ -14,6 +14,8 @@ conda create -n rag_backend python=3.10
 ```bash
 conda activate rag_backend
 ```
+> 以下指令基于Wonderwhy文件夹路径下运行。
+
 安装项目依赖，通过pip安装services/requirements.txt文件中列出的所有必需包：
 
 ```bash
@@ -28,13 +30,15 @@ python services/run.py
 ```
 
 ## 3. 建立向量索引
+> processed_data:https://huggingface.co/datasets/miugod/lic_md
 使用zhipu的glm-4模型，对processed_data目录下的所有Markdown文件进行向量化处理。以下是具体步骤：
 
 3.1 向量化处理
 执行以下命令，将Markdown文件向量化并存储到指定的知识库中：
+> lic_md/processed_data/路径根据自己路径修改
 
 ```bash
-python clients/ingestion_cli.py -d processed_data/ -k lic --save_imgs
+python clients/ingestion_cli.py -d lic_md/processed_data/ -k lic --save_imgs
 ```
 
 3.2 测试向量化效果
