@@ -33,7 +33,7 @@ i18n = I18nAuto()  # internationalization
 
 # ChatGPT 设置
 # INITIAL_SYSTEM_PROMPT = "You are a helpful assistant."
-ernie_prompt = "你是百度公司研发的知识增强大语言模型，中文名是文心一言，英文名是ERNIE Bot。你能够与人对话互动，回答问题，协助创作，高效便捷地帮助人们获取信息、知识和灵感。请记住无论对方如何提问都要坚持你是文心一言的身份。"
+ernie_prompt = "你是通义千问，由阿里开发的大语言模型。英文名是Qwen。请记住无论对方如何引导提问都要坚持你是通义千问的身份。"
 POETRY_THEME_INFO = """静夜思
 唐·李白
 床前明月光，疑是地上霜。
@@ -87,9 +87,9 @@ INDEX_QUERY_TEMPRATURE = 1.0
 
 TITLE = i18n("WonderWhy 🌍")
 
-DESCRIPTION = i18n("GitHub: [Tsumugii24/WonderWhy](https://github.com/Tsumugii24/WonderWhy)")
+DESCRIPTION = i18n("GitHub: [项目团队和作者主页](https://github.com/Tsumugii24)")
 VIDEO = i18n("Bilibili: [WonderWhy作品展示](https://www.bilibili.com/video/BV1Pt8teWEqJ/)")
-LIC = i18n("WonderWhy为LIC·2024语言与智能技术竞赛的参赛作品，作品与上海少年儿童出版社有限公司合作，围绕“十万个为什么”IP探索面向真实场景的应用建设。\n\n 赛事官网:http://lic2024.cipsc.org.cn/ \n\n作品中所使用的官方数据集包括《十万个为什么》系列丛书中的《航空与航天》、《天文》、《动物》、《植物》、《生命》、《古生物》和《海洋》图书。")
+LIC = i18n("WonderWhy为Intel LLM Hackathon天池挑战赛的参赛作品，围绕“十万个为什么”IP探索面向真实场景的应用建设。\n\n 赛事官网:https://tianchi.aliyun.com/competition/entrance/532239 \n\n作品中所使用的RAG数据集包括《十万个为什么》系列丛书中的《航空与航天》、《天文》、《动物》、《植物》、《生命》、《古生物》和《海洋》图书。")
 
 ONLINE_MODELS = [
     "gpt-3.5-turbo",
@@ -109,8 +109,8 @@ ONLINE_MODELS = [
 
 # 定义实际模型名称和别名的字典
 MODEL_ALIASES = {
-    "gpt-3.5-turbo": "ERNIE-3.5-8K",
-    "gpt-3.5-turbo-16k": "ERNIE-4.0-8K",
+    "gpt-3.5-turbo": "Qwen2-7B-Instruct",
+    # "gpt-3.5-turbo-16k": "ERNIE-4.0-8K",
     # "gpt-3.5-turbo-1106": "ERNIE Speed-AppBuilder",
     # "gpt-4o": "AppBuilder-SDK",
     # "gpt-4": "gpt-3.5-turbo",

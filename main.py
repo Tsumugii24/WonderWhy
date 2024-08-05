@@ -395,7 +395,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                                 lines=8
                             )
                             retain_system_prompt_checkbox = gr.Checkbox(
-                                label=i18n("新建对话保留当前讨论主题"), value=False, visible=True,
+                                label=i18n("新建对话保留当前讨论主题"), value=False, visible=False,
                                 elem_classes="switch-checkbox")
                             with gr.Accordion(label=i18n("加载自定义讨论主题"), open=True):
                                 with gr.Column():
