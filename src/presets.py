@@ -89,7 +89,7 @@ TITLE = i18n("WonderWhy 🌍")
 
 DESCRIPTION = i18n("GitHub: [项目团队和作者主页](https://github.com/Tsumugii24)")
 VIDEO = i18n("Bilibili: [WonderWhy作品展示](https://www.bilibili.com/video/BV1Pt8teWEqJ/)")
-LIC = i18n("WonderWhy为Intel LLM Hackathon天池挑战赛的参赛作品，围绕“十万个为什么”IP探索面向真实场景的应用建设。\n\n 赛事官网:https://tianchi.aliyun.com/competition/entrance/532239 \n\n作品中所使用的RAG数据集包括《十万个为什么》系列丛书中的《航空与航天》、《天文》、《动物》、《植物》、《生命》、《古生物》和《海洋》图书。")
+LIC = i18n("WonderWhy为Intel LLM Hackathon天池挑战赛的参赛作品，围绕“十万个为什么”IP探索面向真实场景的应用建设。\n\n 赛事官网: \n\n https://tianchi.aliyun.com/competition/entrance/532239 \n\n 作品中所使用的数据集包括但不限于《十万个为什么》系列丛书中的《航空与航天》、《天文》、《动物》、《植物》、《生命》、《古生物》和《海洋》篇。")
 
 ONLINE_MODELS = [
     "gpt-3.5-turbo",
@@ -162,7 +162,7 @@ REPLY_LANGUAGES = [
 HISTORY_NAME_METHODS = [
     i18n("根据日期时间"),
     i18n("第一条提问"),
-    i18n("模型自动总结（消耗tokens）"),
+    i18n("模型自动总结"),
 ]
 WEBSEARCH_PTOMPT_TEMPLATE = """\
 Web search results:

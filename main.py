@@ -563,7 +563,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                         gr.Markdown(DESCRIPTION)
                         gr.Markdown("#### " + i18n("WonderWhy Demo演示"))
                         gr.Markdown(VIDEO)
-                        gr.Markdown("#### " + i18n("ABOUT WonderWhy&LIC·2024"))
+                        gr.Markdown("#### " + i18n("ABOUT WonderWhy"))
                         gr.Markdown(LIC)
 
     with gr.Row(elem_id="popup-wrapper"):
@@ -609,7 +609,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                         # 网络代理
                         proxyTxt = gr.Textbox(
                             show_label=True,
-                            placeholder=i18n("未设置代理..."),
+                            placeholder=i18n("未设置网络代理..."),
                             label=i18n("代理地址"),
                             value=http_proxy,
                             lines=1,
@@ -619,17 +619,17 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                         )
                         # changeProxyBtn = gr.Button(i18n("🔄 设置代理地址"))
 
-                        # 优先展示自定义的api_host
-                        apihostTxt = gr.Textbox(
-                            show_label=True,
-                            placeholder="aip.baidubce.com",
-                            label="ERNIE API Endpoint",
-                            value="aip.baidubce.com",
-                            lines=1,
-                            interactive=False,
-                            # container=False,
-                            elem_classes="view-only-textbox no-container",
-                        )
+                        # # 优先展示自定义的api_host
+                        # apihostTxt = gr.Textbox(
+                        #     show_label=True,
+                        #     placeholder="默认设置...",
+                        #     label="高级设置",
+                        #     value="默认设置...",
+                        #     lines=1,
+                        #     interactive=False,
+                        #     # container=False,
+                        #     elem_classes="view-only-textbox no-container",
+                        # )
 
                     with gr.Tab(label=i18n("关于"), elem_id="about-tab"):
                         gr.Markdown("# " + i18n("WonderWhy"))
