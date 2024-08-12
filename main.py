@@ -937,7 +937,7 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
         current_model, user_identifier_txt], None, show_progress=False)
 
     default_btn.click(
-        reset_default, [], [apihostTxt, proxyTxt, status_display], show_progress=True
+        reset_default, [], [proxyTxt, status_display], show_progress=True
     )
 
     # Invisible elements
