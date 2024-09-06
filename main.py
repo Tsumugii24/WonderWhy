@@ -843,8 +843,8 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                                  top_p_slider, theme, user_name, current_model],
                                 [current_model, status_display, chatbot], show_progress=True)
     # Template
-    templateRefreshBtn.click(get_template_dropdown, None, [
-        templateFileSelectDropdown])
+    # templateRefreshBtn.click(get_template_dropdown, None, [
+    #     templateFileSelectDropdown])
     templateFileSelectDropdown.input(
         load_template,
         [templateFileSelectDropdown],
