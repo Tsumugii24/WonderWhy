@@ -408,9 +408,9 @@ with gr.Blocks(theme=small_and_beautiful_theme) as demo:
                                                 value=get_template_names()[0],  # 默认选择第一个文件
                                                 container=False,
                                             )
-                                        with gr.Column(scale=1):
-                                            templateRefreshBtn = gr.Button(
-                                                i18n("🔄 刷新"))
+                                        # with gr.Column(scale=1):
+                                        #     templateRefreshBtn = gr.Button(
+                                        #         i18n("🔄 刷新"))
                                     with gr.Row():
                                         with gr.Column():
                                             templateSelectDropdown = gr.Dropdown(

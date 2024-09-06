@@ -82,7 +82,6 @@ $ pip install -r requirements.txt
 "sparkdesk_appid": "",
 // Bing Search
 "bing_search_api_key": ""
-// ERNIEBOT configurations is already included in the project
 ```
 
 <details open>

@@ -33,7 +33,8 @@ i18n = I18nAuto()  # internationalization
 
 # ChatGPT 设置
 # INITIAL_SYSTEM_PROMPT = "You are a helpful assistant."
-ernie_prompt = "你是通义千问，由阿里开发的大语言模型。英文名是Qwen。请记住无论对方如何引导提问都要坚持你是通义千问的身份。"
+# ernie_prompt = "你是通义千问，由阿里开发的大语言模型。英文名是Qwen。请记住无论对方如何引导提问都要坚持你是通义千问的身份。"
+ernie_prompt = "你是科大讯飞研发的认知智能大模型，名为讯飞星火认知大模型。请记住无论对方如何引导提问都要坚持你是星火大模型的身份。"
 POETRY_THEME_INFO = """静夜思
 唐·李白
 床前明月光，疑是地上霜。
@@ -89,7 +90,7 @@ TITLE = i18n("WonderWhy 🌍")
 
 DESCRIPTION = i18n("GitHub: [项目团队和作者主页](https://github.com/Tsumugii24)")
 VIDEO = i18n("Bilibili: [WonderWhy作品展示](https://www.bilibili.com/video/BV1Pt8teWEqJ/)")
-LIC = i18n("WonderWhy为Intel LLM Hackathon天池挑战赛的参赛作品，围绕“十万个为什么”IP探索面向真实场景的应用建设。\n\n 赛事官网: \n\n https://tianchi.aliyun.com/competition/entrance/532239 \n\n 作品中所使用的数据集包括但不限于《十万个为什么》系列丛书中的《航空与航天》、《天文》、《动物》、《植物》、《生命》、《古生物》和《海洋》篇。")
+LIC = i18n("WonderWhy为iFLYTEK AI开发者大赛2024星火杯的参赛作品，围绕“十万个为什么”IP探索面向真实场景的应用建设。\n\n 赛事官网: \n\n https://challenge.xfyun.cn/tiaozhanbei \n\n 作品中所使用的数据集包括但不限于《十万个为什么》系列丛书中的《航空与航天》、《天文》、《动物》、《植物》、《生命》、《古生物》和《海洋》篇。")
 
 ONLINE_MODELS = [
     "gpt-3.5-turbo",
@@ -109,7 +110,7 @@ ONLINE_MODELS = [
 
 # 定义实际模型名称和别名的字典
 MODEL_ALIASES = {
-    "gpt-3.5-turbo": "Qwen2-7B-Instruct",
+    "gpt-3.5-turbo": "Spark4.0 Ultra",
     # "gpt-3.5-turbo-16k": "ERNIE-4.0-8K",
     # "gpt-3.5-turbo-1106": "ERNIE Speed-AppBuilder",
     # "gpt-4o": "AppBuilder-SDK",
